@@ -17,4 +17,9 @@ public class ViewDisposer {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         return new Dimension((int)(((double)width / 1500) * screenSize.width), (int)((double)height / 1000 * screenSize.height));
     }
+
+    public static int getFontSize(int size){
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        return (int)(((double)size / 1.5) * (double)(screenSize.width / screenSize.height));
+    }
 }
