@@ -1,0 +1,24 @@
+/*
+ * Event.java
+ * Author : susemeeee
+ * Created Date : 2020-08-06
+ */
+package com.FBEye.datatype.event;
+
+public class Event {
+    public final Destination destination;
+    public final EventDataType eventDataType;
+    public final byte[] data;
+
+    public Event(Destination destination, EventDataType eventDataType){
+        this.destination = destination;
+        this.eventDataType = eventDataType;
+        data = null;
+    }
+
+    public Event(Destination destination, EventDataType eventDataType, byte[] data){
+        this.destination = destination;
+        this.eventDataType = eventDataType;
+        this.data = data;
+    }
+}
