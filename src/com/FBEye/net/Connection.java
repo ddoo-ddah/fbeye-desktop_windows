@@ -13,7 +13,6 @@ import java.security.cert.X509Certificate;
 
 public class Connection {
     private SSLSocket sslSocket;
-    private SSLContext context;
 
     public void Connect() {
         try {
@@ -40,23 +39,26 @@ public class Connection {
             String[] suites = sslSocketFactory.getSupportedCipherSuites();
             sslSocket = (SSLSocket) sslSocketFactory.createSocket("localhost", 9000); //실제는 10100
             sslSocket.setEnabledCipherSuites(suites);
-
+            sslSocket.startHandshake();
+            startRead();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void startRead() {
+    private void startRead() {
         new Thread(() -> {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream()));
+                BufferedInputStream in = new BufferedInputStream(sslSocket.getInputStream());
 
                 while (sslSocket.isConnected()) {
-                    String receiveString = reader.readLine();
+                    String receiveString = "";
 
-                    if (receiveString != null) {
-                        System.out.println("server : " + receiveString);
-                    }
+                    do{
+                        int c = in.read();
+                        receiveString += (char)c;
+                    }while(in.available() > 0);
+                    System.out.println(receiveString);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
