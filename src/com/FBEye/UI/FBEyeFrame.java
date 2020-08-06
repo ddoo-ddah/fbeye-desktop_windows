@@ -30,14 +30,14 @@ public class FBEyeFrame {
     private List<Object> parameters;
     private Destination targetPage;
 
-    //private LoginPanel loginPanel;
+    private LoginPanel loginPanel;
 
     public FBEyeFrame(){
         list = new EventList();
         init();
         //connection.Connect();
         timer.schedule(task, 100, 100);
-        //mainFrame.add(loginPanel.getPanel());
+        mainFrame.add(loginPanel.getPanel());
         mainFrame.repaint();
     }
 
@@ -54,7 +54,7 @@ public class FBEyeFrame {
                 restore();
             }
         };
-        //loginPanel = new LoginPanel(list);
+        loginPanel = new LoginPanel(list);
     }
 
     private void initMainFrame(){
