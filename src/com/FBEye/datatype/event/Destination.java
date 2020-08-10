@@ -10,5 +10,6 @@ public enum Destination {
     SERVER,
     MANAGER,
     LOGIN_PAGE,
-    EXAM_INFO_PAGE
+    EXAM_INFO_PAGE,
+    ENV_TEST_1
 }

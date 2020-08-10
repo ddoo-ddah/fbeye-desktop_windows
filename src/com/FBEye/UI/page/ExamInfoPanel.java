@@ -7,6 +7,9 @@ package com.FBEye.UI.page;
 
 import com.FBEye.datatype.FBEyeNotice;
 import com.FBEye.datatype.UserInfo;
+import com.FBEye.datatype.event.Destination;
+import com.FBEye.datatype.event.Event;
+import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.datatype.examdata.ExamInfo;
 import com.FBEye.util.DisabledItemSelectionModel;
@@ -125,7 +128,7 @@ public class ExamInfoPanel {
     }
 
     private void onButtonPressed(){
-        System.out.println("다음 페이지 넘어가기");//test
+        list.add(new Event(Destination.ENV_TEST_1, EventDataType.NAVIGATE, null));
     }
 
     public JPanel getPanel(){

@@ -5,6 +5,7 @@
  */
 package com.FBEye.UI;
 
+import com.FBEye.UI.page.EnvTestPanel_1;
 import com.FBEye.UI.page.ExamInfoPanel;
 import com.FBEye.UI.page.LoginPanel;
 import com.FBEye.datatype.event.Destination;
@@ -33,6 +34,7 @@ public class FBEyeFrame {
 
     private LoginPanel loginPanel;
     private ExamInfoPanel examInfoPanel;
+    private EnvTestPanel_1 envTestPanel_1;
 
     public FBEyeFrame(){
         list = new EventList();
@@ -59,6 +61,7 @@ public class FBEyeFrame {
 
         loginPanel = new LoginPanel(list);
         examInfoPanel = new ExamInfoPanel(list);
+        envTestPanel_1 = new EnvTestPanel_1(list);
     }
 
     private void initMainFrame(){
@@ -83,6 +86,12 @@ public class FBEyeFrame {
         if(targetPage == Destination.EXAM_INFO_PAGE){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(examInfoPanel.getPanel());
+            mainFrame.repaint();
+            targetPage = Destination.NONE;
+        }
+        else if(targetPage == Destination.ENV_TEST_1){
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(envTestPanel_1.getPanel());
             mainFrame.repaint();
             targetPage = Destination.NONE;
         }
