@@ -9,5 +9,6 @@ public enum Destination {
     NONE,
     SERVER,
     MANAGER,
-    LOGIN_PAGE
+    LOGIN_PAGE,
+    EXAM_INFO_PAGE
 }

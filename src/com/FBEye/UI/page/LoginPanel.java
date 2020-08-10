@@ -48,6 +48,7 @@ public class LoginPanel {
         panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         panel.setLocation(new Point(0,0));
         panel.setLayout(null);
+        panel.setBackground(Color.WHITE);
         setView();
         panel.setVisible(true);
     }
@@ -109,7 +110,6 @@ public class LoginPanel {
     }
 
     private void restore(){
-
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 break;
@@ -127,8 +127,7 @@ public class LoginPanel {
     }
 
     private void login(){
-        //페이지 이동
-        System.out.println("로그인 성공"); //test
+        list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.NAVIGATE, null));
     }
 
     public JPanel getPanel(){

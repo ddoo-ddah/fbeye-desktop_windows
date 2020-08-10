@@ -5,6 +5,7 @@
  */
 package com.FBEye.UI;
 
+import com.FBEye.UI.page.ExamInfoPanel;
 import com.FBEye.UI.page.LoginPanel;
 import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.EventDataType;
@@ -31,6 +32,7 @@ public class FBEyeFrame {
     private Destination targetPage;
 
     private LoginPanel loginPanel;
+    private ExamInfoPanel examInfoPanel;
 
     public FBEyeFrame(){
         list = new EventList();
@@ -54,7 +56,9 @@ public class FBEyeFrame {
                 restore();
             }
         };
+
         loginPanel = new LoginPanel(list);
+        examInfoPanel = new ExamInfoPanel(list);
     }
 
     private void initMainFrame(){
@@ -76,6 +80,12 @@ public class FBEyeFrame {
 
     private void restore(){
         //페이지 이동 코드
+        if(targetPage == Destination.EXAM_INFO_PAGE){
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(examInfoPanel.getPanel());
+            mainFrame.repaint();
+            targetPage = Destination.NONE;
+        }
 
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
