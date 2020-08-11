@@ -93,9 +93,7 @@ public class EnvTestPanel_1 {
         }
 
         if(currentStep == infoTexts.size()){
-            System.out.println("테스트 1단계 완료"); //test
-            startButton.setVisible(false); //test
-            panel.repaint(); //test
+            list.add(new Event(Destination.ENV_TEST_2, EventDataType.NAVIGATE, null));
         }
         else if(currentStep >= 1){
             //panel.remove(startButton); //실제 사용 시 주석 해제
