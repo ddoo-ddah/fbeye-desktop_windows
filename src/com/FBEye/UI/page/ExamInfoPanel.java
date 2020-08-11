@@ -17,6 +17,7 @@ import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -52,8 +53,8 @@ public class ExamInfoPanel {
         List<String> examInfos = new ArrayList<>();
         examInfos.add("시험 정보");
         examInfos.add("  과목명: " + examInfo.name);
-        examInfos.add("  시작 시간: " + examInfo.startTime.toString());
-        examInfos.add("  종료 시간: " + examInfo.endTime.toString());
+        examInfos.add("  시작 시간: " + examInfo.startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        examInfos.add("  종료 시간: " + examInfo.endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         examInfos.add("  문항 수: " + examInfo.count);
         examInfos.add("  총점: " + examInfo.getTotalScore() + " 점");
         List<String> userInfos = new ArrayList<>();
