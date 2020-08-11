@@ -106,18 +106,18 @@ public class EnvTestPanel_2 {
             }
             if(list.get(i).destination == Destination.ENV_TEST_2 && list.get(i).eventDataType == EventDataType.SIGNAL){
                 if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK") && !isTestStarted){
-                    startButton.setVisible(false);
-                    panel.repaint();
+                    //startButton.setVisible(false); 실제 사용 시 주석 지우기
                     setQRCode();
+                    panel.repaint();
                     isTestStarted = true;
-
-                    //test
-                    list.add(new Event(Destination.ENV_TEST_2, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
+                    list.remove(i);
                 }
-                else if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK") && isTestStarted){
-                    System.out.println("2단계 테스트 완료");
+                else if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK")){
+                    list.remove(i);
+                    list.add(new Event(Destination.ENV_TEST_3, EventDataType.NAVIGATE, null));
+                    timer.cancel();
+                    break;
                 }
-                list.remove(i);
             }
         }
     }

@@ -5,10 +5,7 @@
  */
 package com.FBEye.UI;
 
-import com.FBEye.UI.page.EnvTestPanel_1;
-import com.FBEye.UI.page.EnvTestPanel_2;
-import com.FBEye.UI.page.ExamInfoPanel;
-import com.FBEye.UI.page.LoginPanel;
+import com.FBEye.UI.page.*;
 import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
@@ -37,6 +34,7 @@ public class FBEyeFrame {
     private ExamInfoPanel examInfoPanel;
     private EnvTestPanel_1 envTestPanel_1;
     private EnvTestPanel_2 envTestPanel_2;
+    private EnvTestPanel_3 envTestPanel_3;
 
     public FBEyeFrame(){
         list = new EventList();
@@ -65,6 +63,7 @@ public class FBEyeFrame {
         examInfoPanel = new ExamInfoPanel(list);
         envTestPanel_1 = new EnvTestPanel_1(list);
         envTestPanel_2 = new EnvTestPanel_2(list);
+        envTestPanel_3 = new EnvTestPanel_3(list);
     }
 
     private void initMainFrame(){
@@ -101,6 +100,12 @@ public class FBEyeFrame {
         else if(targetPage == Destination.ENV_TEST_2){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(envTestPanel_2.getPanel());
+            mainFrame.repaint();
+            targetPage = Destination.NONE;
+        }
+        else if(targetPage == Destination.ENV_TEST_3){
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(envTestPanel_3.getPanel());
             mainFrame.repaint();
             targetPage = Destination.NONE;
         }

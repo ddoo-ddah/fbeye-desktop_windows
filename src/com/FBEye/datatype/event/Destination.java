@@ -12,5 +12,6 @@ public enum Destination {
     LOGIN_PAGE,
     EXAM_INFO_PAGE,
     ENV_TEST_1,
-    ENV_TEST_2
+    ENV_TEST_2,
+    ENV_TEST_3
 }
