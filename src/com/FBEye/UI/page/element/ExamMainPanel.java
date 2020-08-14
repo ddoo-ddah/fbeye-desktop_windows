@@ -203,7 +203,7 @@ public class ExamMainPanel {
         }
     }
 
-    private void saveAnswer(AnswerState state){
+    public void saveAnswer(AnswerState state){
         QuestionInfo currentQuestion = examInfo.questions.get(currentNumber);
         if(currentQuestion.type == QuestionType.DESCRIPTIVE){
             String answer = answerArea.getText();
@@ -279,6 +279,20 @@ public class ExamMainPanel {
 
     public AnswerState getState(int index){
         return answers.get(index).getState();
+    }
+
+    public String getAnswers(){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < answers.size(); i++){
+            if(answers.get(i).getAnswer() != null && !answers.get(i).getAnswer().equals("")){
+                sb.append(i + 1);
+                sb.append("#");
+                sb.append(answers.get(i).getAnswer());
+                sb.append("|");
+            }
+        }
+        System.out.println(sb.toString());
+        return sb.toString();
     }
 
     public void setCurrentNumber(int currentNumber){
