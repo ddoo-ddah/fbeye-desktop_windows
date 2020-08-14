@@ -6,19 +6,18 @@
 package com.FBEye.UI.page;
 
 import com.FBEye.UI.page.element.*;
-import com.FBEye.datatype.ChatInfo;
 import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.datatype.examdata.*;
 import com.FBEye.util.DataExchanger;
+import com.FBEye.util.QRGenerator;
 import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -27,13 +26,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ExamPanel {
+    private final double QR_CHANGE_CYCLE = 3;
+
     private JPanel panel;
     private EventList list;
     private Timer timer;
     private TimerTask task;
     private ExamInfo examInfo;
     private List<AnswerInfo> answers;
-
+    private double QRChangeTime;
+    private int squaredQRSize;
+    private int data = 0; //test
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -45,6 +48,7 @@ public class ExamPanel {
     private JButton submissionButton;
 
     public ExamPanel(EventList list){
+        QRChangeTime = 0;
         this.list = list;
         initPanel();
         timer = new Timer();
@@ -68,6 +72,21 @@ public class ExamPanel {
     }
 
     private void setView(){
+        Dimension QRSize = ViewDisposer.getSize(70, 70);
+        squaredQRSize = Math.min(QRSize.width, QRSize.height);
+        ImageIcon img = QRGenerator.generateQR(Double.toString(QRChangeTime), squaredQRSize, squaredQRSize);
+        topQRCode = new JLabel(img);
+        topQRCode.setLocation(ViewDisposer.getLocation(715, 0));
+        topQRCode.setSize(QRSize);
+        topQRCode.setVisible(true);
+        panel.add(topQRCode);
+
+        bottomQRCode = new JLabel(img);
+        bottomQRCode.setLocation(ViewDisposer.getLocation(715, 928));
+        bottomQRCode.setSize(QRSize);
+        bottomQRCode.setVisible(true);
+        panel.add(bottomQRCode);
+
         timePanel = new TimePanel(1130, 70);
         panel.add(timePanel.getPanel());
         memoPanel = new MemoPanel(1130, 225);
@@ -118,6 +137,14 @@ public class ExamPanel {
         Duration duration = Duration.between(now.toLocalDateTime(), examInfo.endTime);
         timePanel.setTime(duration.toHours() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart());
 
+        if(QRChangeTime >= QR_CHANGE_CYCLE){
+            ImageIcon img = QRGenerator.generateQR(Integer.toString(++data), squaredQRSize, squaredQRSize);
+            topQRCode.setIcon(img);
+            bottomQRCode.setIcon(img);
+            panel.repaint();
+            QRChangeTime = 0;
+        }
+
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 list.remove(i);
@@ -131,6 +158,8 @@ public class ExamPanel {
                    chatReceived(new DataExchanger<String>().fromByteArray(e.data));
             }
         }
+
+        QRChangeTime += 0.1;
     }
 
     private void chatReceived(String chat){
