@@ -35,6 +35,7 @@ public class FBEyeFrame {
     private EnvTestPanel_1 envTestPanel_1;
     private EnvTestPanel_2 envTestPanel_2;
     private EnvTestPanel_3 envTestPanel_3;
+    private ExamPanel examPanel;
 
     public FBEyeFrame(){
         list = new EventList();
@@ -64,6 +65,7 @@ public class FBEyeFrame {
         envTestPanel_1 = new EnvTestPanel_1(list);
         envTestPanel_2 = new EnvTestPanel_2(list);
         envTestPanel_3 = new EnvTestPanel_3(list);
+        examPanel = new ExamPanel(list);
     }
 
     private void initMainFrame(){
@@ -84,8 +86,13 @@ public class FBEyeFrame {
     }
 
     private void restore(){
-        //페이지 이동 코드
-        if(targetPage == Destination.EXAM_INFO_PAGE){
+        if(targetPage == Destination.LOGIN_PAGE){
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(loginPanel.getPanel());
+            mainFrame.repaint();
+            targetPage = Destination.NONE;
+        }
+        else if(targetPage == Destination.EXAM_INFO_PAGE){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(examInfoPanel.getPanel());
             mainFrame.repaint();
@@ -109,6 +116,15 @@ public class FBEyeFrame {
             mainFrame.repaint();
             targetPage = Destination.NONE;
         }
+        else if(targetPage == Destination.EXAM_PAGE){
+            mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+            mainFrame.repaint();
+            mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(examPanel.getPanel());
+            mainFrame.repaint();
+            targetPage = Destination.NONE;
+        }
 
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
@@ -125,7 +141,7 @@ public class FBEyeFrame {
                     parameters.add(new DataExchanger<>().fromByteArray(list.get(i).data));
                     list.remove(i);
                 }
-                if(list.get(i).eventDataType == EventDataType.NAVIGATE){
+                else if(list.get(i).eventDataType == EventDataType.NAVIGATE){
                     targetPage = list.get(i).destination;
                     list.remove(i);
                 }

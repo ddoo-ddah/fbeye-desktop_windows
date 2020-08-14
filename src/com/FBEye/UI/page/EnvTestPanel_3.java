@@ -93,11 +93,6 @@ public class EnvTestPanel_3 {
         testButton.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(20)));
         testButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
             public void mousePressed(MouseEvent e) {
                 onTestButtonClicked(e);
             }
@@ -150,7 +145,8 @@ public class EnvTestPanel_3 {
             testCycle++;
         }
         else if(currentStep >= BUTTON_COUNT){
-            System.out.println("3단계 테스트 성공"); //test
+            timer.cancel();
+            list.add(new Event(Destination.EXAM_PAGE, EventDataType.NAVIGATE, null));
             return;
         }
         testButton.setLocation(testButtonLocations.get(currentStep));
