@@ -35,6 +35,7 @@ public class FBEyeFrame {
     private EnvTestPanel_1 envTestPanel_1;
     private EnvTestPanel_2 envTestPanel_2;
     private EnvTestPanel_3 envTestPanel_3;
+    private EnvTestPanel_4 envTestPanel_4;
     private ExamPanel examPanel;
 
     public FBEyeFrame(){
@@ -65,6 +66,7 @@ public class FBEyeFrame {
         envTestPanel_1 = new EnvTestPanel_1(list);
         envTestPanel_2 = new EnvTestPanel_2(list);
         envTestPanel_3 = new EnvTestPanel_3(list);
+        envTestPanel_4 = new EnvTestPanel_4(list);
         examPanel = new ExamPanel(list);
     }
 
@@ -113,6 +115,12 @@ public class FBEyeFrame {
         else if(targetPage == Destination.ENV_TEST_3){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(envTestPanel_3.getPanel());
+            mainFrame.repaint();
+            targetPage = Destination.NONE;
+        }
+        else if(targetPage == Destination.ENV_TEST_4){
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(envTestPanel_4.getPanel());
             mainFrame.repaint();
             targetPage = Destination.NONE;
         }

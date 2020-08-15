@@ -35,7 +35,7 @@ public class TimePanel {
     private void setView(){
         text = new JLabel("남은 시간");
         Point location = ViewDisposer.getLocation(1210, 105);
-        Dimension size = ViewDisposer.getSize(70, 20);
+        Dimension size = ViewDisposer.getSize(150, 20);
         text.setLocation(new Point(location.x - panelLocation.x, location.y - panelLocation.y));
         text.setSize(size);
         text.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(24)));
