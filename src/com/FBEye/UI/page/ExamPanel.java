@@ -135,6 +135,11 @@ public class ExamPanel {
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         Duration duration = Duration.between(now.toLocalDateTime(), examInfo.endTime);
+        if(duration.toSeconds() <= 0){
+            JOptionPane.showMessageDialog(panel, "시험이 종료 되었습니다.", "시험 종료", JOptionPane.INFORMATION_MESSAGE);
+            timer.cancel();
+            endTest();
+        }
         timePanel.setTime(duration.toHours() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart());
 
         if(QRChangeTime >= QR_CHANGE_CYCLE){
