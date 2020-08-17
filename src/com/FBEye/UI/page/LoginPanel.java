@@ -5,6 +5,7 @@
  */
 package com.FBEye.UI.page;
 
+import com.FBEye.datatype.LoginInfo;
 import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
@@ -60,11 +61,7 @@ public class LoginPanel {
         loginButton.setBounds(location.x, location.y, size.width, size.height);
         loginButton.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(50)));
         loginButton.addActionListener(e -> {
-            String loginData = "#examcode:" + inputExamId.getText() + "#usercode:" + inputUserId.getText();
-            list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, new DataExchanger<String>().toByteArray(loginData)));
-
-            //test
-            list.add(new Event(Destination.LOGIN_PAGE, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
+            onLoginButtonClicked();
         });
         loginButton.setVisible(true);
         panel.add(loginButton);
@@ -115,7 +112,7 @@ public class LoginPanel {
                 break;
             }
             if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK")){
+                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("\"OK\"")){
                     login();
                 }
                 else{
@@ -128,6 +125,11 @@ public class LoginPanel {
 
     private void login(){
         list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.NAVIGATE, null));
+    }
+
+    private void onLoginButtonClicked(){
+        String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
+        list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, new DataExchanger<String>().toByteArray(loginData)));
     }
 
     public JPanel getPanel(){

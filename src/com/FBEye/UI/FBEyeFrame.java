@@ -7,10 +7,14 @@ package com.FBEye.UI;
 
 import com.FBEye.UI.page.*;
 import com.FBEye.datatype.event.Destination;
+import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.net.Connection;
 import com.FBEye.util.DataExchanger;
+import com.FBEye.util.JsonMaker;
+import com.FBEye.util.JsonParser;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +33,9 @@ public class FBEyeFrame {
     private TimerTask task;
     private List<Object> parameters;
     private Destination targetPage;
+    private Destination currentPage;
+    private JsonMaker jsonMaker;
+    private JsonParser jsonParser;
 
     private LoginPanel loginPanel;
     private ExamInfoPanel examInfoPanel;
@@ -41,14 +48,17 @@ public class FBEyeFrame {
     public FBEyeFrame(){
         list = new EventList();
         init();
-        //connection.Connect();
+        connection.Connect();
         timer.schedule(task, 100, 100);
         mainFrame.add(loginPanel.getPanel());
+        currentPage = Destination.LOGIN_PAGE;
         mainFrame.repaint();
     }
 
     private void init(){
-        //connection = new Connection();
+        jsonMaker = new JsonMaker();
+        jsonParser = new JsonParser();
+        connection = new Connection(list);
         mainFrame = new JFrame("FBEye");
         parameters = new ArrayList<>();
         targetPage = Destination.NONE;
@@ -62,7 +72,6 @@ public class FBEyeFrame {
         };
 
         loginPanel = new LoginPanel(list);
-        examInfoPanel = new ExamInfoPanel(list);
         envTestPanel_1 = new EnvTestPanel_1(list);
         envTestPanel_2 = new EnvTestPanel_2(list);
         envTestPanel_3 = new EnvTestPanel_3(list);
@@ -92,36 +101,43 @@ public class FBEyeFrame {
             mainFrame.getContentPane().removeAll();
             mainFrame.add(loginPanel.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.EXAM_INFO_PAGE){
+            examInfoPanel = new ExamInfoPanel(list);
             mainFrame.getContentPane().removeAll();
             mainFrame.add(examInfoPanel.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.ENV_TEST_1){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(envTestPanel_1.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.ENV_TEST_2){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(envTestPanel_2.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.ENV_TEST_3){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(envTestPanel_3.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.ENV_TEST_4){
             mainFrame.getContentPane().removeAll();
             mainFrame.add(envTestPanel_4.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.EXAM_PAGE){
@@ -131,6 +147,7 @@ public class FBEyeFrame {
             mainFrame.getContentPane().removeAll();
             mainFrame.add(examPanel.getPanel());
             mainFrame.repaint();
+            currentPage = targetPage;
             targetPage = Destination.NONE;
         }
 
@@ -139,10 +156,21 @@ public class FBEyeFrame {
                 break;
             }
             else if(list.get(i).destination == Destination.SERVER){
-                //서버로 보내기
+                Event e = list.get(i);
+                if(e.data != null){
+                    //connection.send(jsonMaker.makeJson(e.eventDataType, new DataExchanger<String>().fromByteArray(e.data)));
+                }
+                list.remove(i);
             }
             else if(list.get(i).destination == Destination.MANAGER){
-                //서버에서 온 것
+                Event e = list.get(i);
+                if(e.data != null){
+                    List<Object> receivedData = jsonParser.parse(new JSONObject(new DataExchanger<String>().fromByteArray(e.data)));
+                    if((EventDataType)(receivedData.get(0)) == EventDataType.SIGNAL){
+                        list.add(new Event(currentPage, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray((String)receivedData.get(1))));
+                    }
+                }
+                list.remove(i);
             }
             else{
                 if(list.get(i).eventDataType == EventDataType.PARAMETER && list.get(i).data != null){
