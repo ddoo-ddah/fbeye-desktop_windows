@@ -5,6 +5,13 @@
  */
 package com.FBEye.net;
 
+import com.FBEye.datatype.event.Destination;
+import com.FBEye.datatype.event.Event;
+import com.FBEye.datatype.event.EventDataType;
+import com.FBEye.datatype.event.EventList;
+import com.FBEye.util.DataExchanger;
+import org.json.JSONObject;
+
 import javax.net.ssl.*;
 import java.io.*;
 import java.security.SecureRandom;
@@ -13,6 +20,11 @@ import java.security.cert.X509Certificate;
 
 public class Connection {
     private SSLSocket sslSocket;
+    private EventList list;
+
+    public Connection(EventList list){
+        this.list = list;
+    }
 
     public void Connect() {
         try {
@@ -58,7 +70,7 @@ public class Connection {
                         int c = in.read();
                         receiveString += (char)c;
                     }while(in.available() > 0);
-                    System.out.println(receiveString);
+                    list.add(new Event(Destination.MANAGER, EventDataType.HEADER, new DataExchanger<String>().toByteArray(receiveString)));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -66,13 +78,13 @@ public class Connection {
         }).start();
     }
 
-    public void send(byte[] data) {
+    public void send(JSONObject data) {
         try {
             if (sslSocket.isConnected()) {
                 OutputStream outputstream = sslSocket.getOutputStream();
                 OutputStreamWriter outputstreamwriter = new OutputStreamWriter(outputstream);
                 BufferedWriter bufferedwriter = new BufferedWriter(outputstreamwriter);
-                String string = new String(data);
+                String string = data.toString();
                 bufferedwriter.write(string);
                 bufferedwriter.flush();
             }
