@@ -105,59 +105,6 @@ public class FBEyeFrame {
             targetPage = Destination.NONE;
         }
 
-        /*if(targetPage == Destination.LOGIN_PAGE){
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(pageMap.get(targetPage).getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }
-        else if(targetPage == Destination.EXAM_INFO_PAGE){
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(examInfoPanel.getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }
-        else if(targetPage == Destination.ENV_TEST_1){
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(envTestPanel_1.getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }
-        else if(targetPage == Destination.ENV_TEST_2){
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(envTestPanel_2.getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }
-        else if(targetPage == Destination.ENV_TEST_3){
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(envTestPanel_3.getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }
-        else if(targetPage == Destination.ENV_TEST_4){
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(envTestPanel_4.getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }
-        else if(targetPage == Destination.EXAM_PAGE){
-            mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-            mainFrame.repaint();
-            mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-            mainFrame.getContentPane().removeAll();
-            mainFrame.add(examPanel.getPanel());
-            mainFrame.repaint();
-            currentPage = targetPage;
-            targetPage = Destination.NONE;
-        }*/
-
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 break;
