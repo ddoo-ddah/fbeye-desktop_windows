@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="zxing-core-2.2" level="project" />
+    <orderEntry type="library" name="json-20200518" level="project" />
   </component>
 </module>
