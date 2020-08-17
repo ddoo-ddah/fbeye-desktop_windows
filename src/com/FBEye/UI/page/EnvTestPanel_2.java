@@ -19,11 +19,7 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class EnvTestPanel_2 {
-    private JPanel panel;
-    private EventList list;
-    private Timer timer;
-    private TimerTask task;
+public class EnvTestPanel_2 extends Page {
     private boolean isTestStarted;
 
     private JLabel topQRCode;
@@ -31,7 +27,7 @@ public class EnvTestPanel_2 {
     private JButton startButton;
 
     public EnvTestPanel_2(EventList list){
-        this.list = list;
+        super(list);
         isTestStarted = false;
         initPanel();
         timer = new Timer();
@@ -44,17 +40,8 @@ public class EnvTestPanel_2 {
         timer.schedule(task, 100, 100);
     }
 
-    private void initPanel(){
-        panel = new JPanel();
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-    }
-
-    private void setView(){
+    @Override
+    protected void setView(){
         JLabel infoText = new JLabel(new FBEyeNotice().envTestInfoText_2);
         Point location = ViewDisposer.getLocation(384, 440);
         Dimension size = ViewDisposer.getSize(760, 200);
@@ -99,7 +86,8 @@ public class EnvTestPanel_2 {
         panel.add(bottomQRCode);
     }
 
-    private void restore(){
+    @Override
+    protected void restore(){
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 break;
@@ -127,9 +115,5 @@ public class EnvTestPanel_2 {
 
         //test
         list.add(new Event(Destination.ENV_TEST_2, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
-    }
-
-    public JPanel getPanel(){
-        return panel;
     }
 }

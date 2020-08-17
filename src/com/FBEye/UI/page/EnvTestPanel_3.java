@@ -22,15 +22,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class EnvTestPanel_3 {
+public class EnvTestPanel_3 extends Page{
     private final int RANDOM_BUTTON_COUNT = 5;
     private final int BUTTON_COUNT = 14;
     private final int CYCLE = 4;
 
-    private JPanel panel;
-    private EventList list;
-    private Timer timer;
-    private TimerTask task;
     private List<Point> testButtonLocations;
     private int currentStep;
     private int testCycle;
@@ -40,7 +36,7 @@ public class EnvTestPanel_3 {
     private JButton testButton;
 
     public EnvTestPanel_3(EventList list){
-        this.list = list;
+        super(list);
         currentStep = -1;
         testCycle = 0;
         initPanel();
@@ -54,17 +50,8 @@ public class EnvTestPanel_3 {
         timer.schedule(task, 100, 100);
     }
 
-    private void initPanel(){
-        panel = new JPanel();
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-    }
-
-    private void setView(){
+    @Override
+    protected void setView(){
         infoTextLabel = new JLabel("화면에 나타나는 버튼을 누르세요");
         Point location = ViewDisposer.getLocation(365, 440);
         Dimension size = ViewDisposer.getSize(760, 200);
@@ -119,7 +106,8 @@ public class EnvTestPanel_3 {
         }
     }
 
-    private void restore(){
+    @Override
+    protected void restore(){
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 break;
@@ -146,7 +134,7 @@ public class EnvTestPanel_3 {
         }
         else if(currentStep >= BUTTON_COUNT){
             timer.cancel();
-            list.add(new Event(Destination.EXAM_PAGE, EventDataType.NAVIGATE, null));
+            list.add(new Event(Destination.ENV_TEST_4, EventDataType.NAVIGATE, null));
             return;
         }
         testButton.setLocation(testButtonLocations.get(currentStep));
@@ -165,9 +153,5 @@ public class EnvTestPanel_3 {
 
         //test
         list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
-    }
-
-    public JPanel getPanel(){
-        return panel;
     }
 }

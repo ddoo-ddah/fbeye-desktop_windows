@@ -25,13 +25,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class EnvTestPanel_4 {
+public class EnvTestPanel_4 extends Page{
     private final double QR_CHANGE_CYCLE = 3;
 
-    private JPanel panel;
-    private EventList list;
-    private Timer timer;
-    private TimerTask task;
     private ExamInfo examInfo;
     private double QRChangeTime;
     private int squaredQRSize;
@@ -47,8 +43,8 @@ public class EnvTestPanel_4 {
     private JButton startTestButton;
 
     public EnvTestPanel_4(EventList list){
+        super(list);
         QRChangeTime = 0;
-        this.list = list;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -60,17 +56,8 @@ public class EnvTestPanel_4 {
         timer.schedule(task, 100, 100);
     }
 
-    private void initPanel(){
-        panel = new JPanel();
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-    }
-
-    private void setView(){
+    @Override
+    protected void setView(){
         Dimension QRSize = ViewDisposer.getSize(70, 70);
         squaredQRSize = Math.min(QRSize.width, QRSize.height);
         ImageIcon img = QRGenerator.generateQR(Double.toString(QRChangeTime), squaredQRSize, squaredQRSize);
@@ -112,7 +99,8 @@ public class EnvTestPanel_4 {
         panel.add(startTestButton);
     }
 
-    private void restore(){
+    @Override
+    protected void restore(){
         if(examMainPanel.getIsChanged()) {
             questionNumberPanel.setPrevNumber(examMainPanel.getPrevNumber());
             questionNumberPanel.setCurrentNumber(examMainPanel.getCurrentNumber());
@@ -214,9 +202,5 @@ public class EnvTestPanel_4 {
 
     private void onStartTestButtonClicked(){
         startTest();
-    }
-
-    public JPanel getPanel(){
-        return panel;
     }
 }

@@ -13,5 +13,7 @@ public enum EventDataType {
     COORDINATE,
     NAVIGATE,
     PARAMETER,
-    LOGINCODE
+    LOGINCODE,
+    EXAM_INFO,
+    USER_INFO
 }

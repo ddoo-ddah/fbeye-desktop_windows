@@ -20,10 +20,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class FBEyeFrame {
     private Connection connection;
@@ -37,30 +36,24 @@ public class FBEyeFrame {
     private JsonMaker jsonMaker;
     private JsonParser jsonParser;
 
-    private LoginPanel loginPanel;
-    private ExamInfoPanel examInfoPanel;
-    private EnvTestPanel_1 envTestPanel_1;
-    private EnvTestPanel_2 envTestPanel_2;
-    private EnvTestPanel_3 envTestPanel_3;
-    private EnvTestPanel_4 envTestPanel_4;
-    private ExamPanel examPanel;
+    private EnumMap<Destination, Page> pageMap;
 
     public FBEyeFrame(){
         list = new EventList();
         init();
-        connection.Connect();
+        //connection.Connect();
         timer.schedule(task, 100, 100);
-        mainFrame.add(loginPanel.getPanel());
-        currentPage = Destination.LOGIN_PAGE;
+        mainFrame.add(pageMap.get(currentPage).getPanel());
         mainFrame.repaint();
     }
 
     private void init(){
         jsonMaker = new JsonMaker();
         jsonParser = new JsonParser();
-        connection = new Connection(list);
+        //connection = new Connection(list);
         mainFrame = new JFrame("FBEye");
         parameters = new ArrayList<>();
+        currentPage = Destination.ENV_TEST_4;
         targetPage = Destination.NONE;
         initMainFrame();
         timer = new Timer();
@@ -71,12 +64,14 @@ public class FBEyeFrame {
             }
         };
 
-        loginPanel = new LoginPanel(list);
-        envTestPanel_1 = new EnvTestPanel_1(list);
-        envTestPanel_2 = new EnvTestPanel_2(list);
-        envTestPanel_3 = new EnvTestPanel_3(list);
-        envTestPanel_4 = new EnvTestPanel_4(list);
-        examPanel = new ExamPanel(list);
+        pageMap = new EnumMap<Destination, Page>(Destination.class);
+        pageMap.put(Destination.LOGIN_PAGE, new LoginPanel(list));
+        pageMap.put(Destination.EXAM_INFO_PAGE, new ExamInfoPanel(list));
+        pageMap.put(Destination.ENV_TEST_1, new EnvTestPanel_1(list));
+        pageMap.put(Destination.ENV_TEST_2, new EnvTestPanel_2(list));
+        pageMap.put(Destination.ENV_TEST_3, new EnvTestPanel_3(list));
+        pageMap.put(Destination.ENV_TEST_4, new EnvTestPanel_4(list));
+        pageMap.put(Destination.EXAM_PAGE, new ExamPanel(list));
     }
 
     private void initMainFrame(){
@@ -97,15 +92,27 @@ public class FBEyeFrame {
     }
 
     private void restore(){
-        if(targetPage == Destination.LOGIN_PAGE){
+        if(targetPage != Destination.NONE){
+            if(targetPage == Destination.EXAM_PAGE){
+                mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+                mainFrame.repaint();
+                mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            }
             mainFrame.getContentPane().removeAll();
-            mainFrame.add(loginPanel.getPanel());
+            mainFrame.add(pageMap.get(targetPage).getPanel());
+            mainFrame.repaint();
+            currentPage = targetPage;
+            targetPage = Destination.NONE;
+        }
+
+        /*if(targetPage == Destination.LOGIN_PAGE){
+            mainFrame.getContentPane().removeAll();
+            mainFrame.add(pageMap.get(targetPage).getPanel());
             mainFrame.repaint();
             currentPage = targetPage;
             targetPage = Destination.NONE;
         }
         else if(targetPage == Destination.EXAM_INFO_PAGE){
-            examInfoPanel = new ExamInfoPanel(list);
             mainFrame.getContentPane().removeAll();
             mainFrame.add(examInfoPanel.getPanel());
             mainFrame.repaint();
@@ -149,7 +156,7 @@ public class FBEyeFrame {
             mainFrame.repaint();
             currentPage = targetPage;
             targetPage = Destination.NONE;
-        }
+        }*/
 
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){

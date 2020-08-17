@@ -25,13 +25,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ExamPanel {
+public class ExamPanel extends Page{
     private final double QR_CHANGE_CYCLE = 3;
 
-    private JPanel panel;
-    private EventList list;
-    private Timer timer;
-    private TimerTask task;
     private ExamInfo examInfo;
     private List<AnswerInfo> answers;
     private double QRChangeTime;
@@ -48,8 +44,8 @@ public class ExamPanel {
     private JButton submissionButton;
 
     public ExamPanel(EventList list){
+        super(list);
         QRChangeTime = 0;
-        this.list = list;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -61,17 +57,8 @@ public class ExamPanel {
         timer.schedule(task, 100, 100);
     }
 
-    private void initPanel(){
-        panel = new JPanel();
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-    }
-
-    private void setView(){
+    @Override
+    protected void setView(){
         Dimension QRSize = ViewDisposer.getSize(70, 70);
         squaredQRSize = Math.min(QRSize.width, QRSize.height);
         ImageIcon img = QRGenerator.generateQR(Double.toString(QRChangeTime), squaredQRSize, squaredQRSize);
@@ -111,7 +98,8 @@ public class ExamPanel {
         panel.add(submissionButton);
     }
 
-    private void restore(){
+    @Override
+    protected void restore(){
         if(examMainPanel.getIsChanged()) {
             questionNumberPanel.setPrevNumber(examMainPanel.getPrevNumber());
             questionNumberPanel.setCurrentNumber(examMainPanel.getCurrentNumber());
@@ -204,9 +192,5 @@ public class ExamPanel {
         if(result == JOptionPane.YES_OPTION){
             endTest();
         }
-    }
-
-    public JPanel getPanel(){
-        return panel;
     }
 }

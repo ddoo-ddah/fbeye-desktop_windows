@@ -18,11 +18,7 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LoginPanel {
-    private JPanel panel;
-    private EventList list;
-    private Timer timer;
-    private TimerTask task;
+public class LoginPanel extends Page{
 
     private JButton loginButton;
     private JTextField inputExamId;
@@ -32,8 +28,7 @@ public class LoginPanel {
     private JLabel logoImageLabel;
 
     public LoginPanel(EventList list){
-        this.list = list;
-        this.panel = new JPanel();
+        super(list);
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -45,16 +40,8 @@ public class LoginPanel {
         timer.schedule(task, 100, 100);
     }
 
-    private void initPanel(){
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-    }
-
-    private void setView(){
+    @Override
+    protected void setView(){
         loginButton = new JButton("인증");
         Point location = ViewDisposer.getLocation(625, 750);
         Dimension size = ViewDisposer.getSize(200, 80);
@@ -106,7 +93,8 @@ public class LoginPanel {
         panel.add(logoImageLabel);
     }
 
-    private void restore(){
+    @Override
+    protected void restore(){
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 break;
@@ -130,9 +118,7 @@ public class LoginPanel {
     private void onLoginButtonClicked(){
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
         list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, new DataExchanger<String>().toByteArray(loginData)));
-    }
-
-    public JPanel getPanel(){
-        return panel;
+        //test
+        list.add(new Event(Destination.LOGIN_PAGE, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("\"OK\"")));
     }
 }

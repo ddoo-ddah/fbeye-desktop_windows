@@ -20,10 +20,9 @@ import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.Timer;
 
-public class ExamInfoPanel {
-    private JPanel panel;
-    private EventList list;
+public class ExamInfoPanel extends Page{
     private ExamInfo examInfo;
     private UserInfo userInfo;
 
@@ -31,22 +30,20 @@ public class ExamInfoPanel {
     private JButton takeExamButton;
 
     public ExamInfoPanel(EventList list){
-        this.list = list;
+        super(list);
         initPanel();
+        timer = new Timer();
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                restore();
+            }
+        };
+        timer.schedule(task, 100, 100);
     }
 
-    private void initPanel(){
-        panel = new JPanel();
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-
-    }
-
-    private void setView(){
+    @Override
+    protected void setView(){
         //테스트 데이터
         examInfo = new ExamInfo("test", 3, new ArrayList<>());
         userInfo = new UserInfo(123456, "이름", "test@test.com",  "소속이름");
@@ -122,17 +119,32 @@ public class ExamInfoPanel {
         panel.add(takeExamButton);
     }
 
+    @Override
+    protected void restore(){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i) == null){
+                break;
+            }
+            if(list.get(i).destination == Destination.EXAM_INFO_PAGE && list.get(i).eventDataType != EventDataType.NAVIGATE){
+                Event e = list.get(i);
+                if(e.eventDataType == EventDataType.EXAM_INFO){
+
+                }
+                else if(e.eventDataType == EventDataType.USER_INFO){
+
+                }
+                list.remove(i);
+            }
+        }
+    }
+
     private void onChecked(){
         readNoticeCheck.setEnabled(false);
         takeExamButton.setEnabled(true);
         panel.repaint();
     }
 
-    private void onButtonPressed(){
+    private void onButtonPressed() {
         list.add(new Event(Destination.ENV_TEST_1, EventDataType.NAVIGATE, null));
-    }
-
-    public JPanel getPanel(){
-        return panel;
     }
 }
