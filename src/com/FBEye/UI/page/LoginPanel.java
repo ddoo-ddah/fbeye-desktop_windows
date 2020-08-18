@@ -10,7 +10,6 @@ import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
-import com.FBEye.util.DataExchanger;
 import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
@@ -100,7 +99,7 @@ public class LoginPanel extends Page{
                 break;
             }
             if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK")){
+                if(list.get(i).data.equals("OK")){
                     login();
                 }
                 else{
@@ -117,6 +116,6 @@ public class LoginPanel extends Page{
 
     private void onLoginButtonClicked(){
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
-        list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, new DataExchanger<String>().toByteArray(loginData)));
+        list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, loginData));
     }
 }

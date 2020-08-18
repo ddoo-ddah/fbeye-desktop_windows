@@ -8,7 +8,7 @@ package com.FBEye.datatype.event;
 public class Event {
     public final Destination destination;
     public final EventDataType eventDataType;
-    public final byte[] data;
+    public final Object data;
 
     public Event(Destination destination, EventDataType eventDataType){
         this.destination = destination;
@@ -16,7 +16,7 @@ public class Event {
         data = null;
     }
 
-    public Event(Destination destination, EventDataType eventDataType, byte[] data){
+    public Event(Destination destination, EventDataType eventDataType, Object data){
         this.destination = destination;
         this.eventDataType = eventDataType;
         this.data = data;

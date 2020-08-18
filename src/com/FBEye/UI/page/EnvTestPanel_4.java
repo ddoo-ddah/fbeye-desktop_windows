@@ -11,7 +11,6 @@ import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.datatype.examdata.*;
-import com.FBEye.util.DataExchanger;
 import com.FBEye.util.QRGenerator;
 import com.FBEye.util.ViewDisposer;
 
@@ -116,7 +115,7 @@ public class EnvTestPanel_4 extends Page{
         }
         if(chatPanel.getSendChat()){
             String chat = chatPanel.getChatContent();
-            list.add(new Event(Destination.SERVER, EventDataType.CHAT, new DataExchanger<String>().toByteArray(chat)));
+            list.add(new Event(Destination.SERVER, EventDataType.CHAT, chat));
             chatPanel.setSendChat(false);
             chatPanel.resetChatContent();
             chatPanel.getPanel().repaint();
@@ -157,7 +156,7 @@ public class EnvTestPanel_4 extends Page{
 
             }
             else if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.CHAT){
-                chatReceived(new DataExchanger<String>().fromByteArray(e.data));
+                chatReceived((String)e.data);
             }
         }
 

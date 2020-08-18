@@ -44,26 +44,7 @@ public class ExamInfoPanel extends Page{
 
     @Override
     protected void setView(){
-        //테스트 데이터
-        examInfo = new ExamInfo("test", 3, new ArrayList<>());
-        userInfo = new UserInfo(123456, "이름", "test@test.com",  "소속이름");
-        List<String> examInfos = new ArrayList<>();
-        examInfos.add("시험 정보");
-        examInfos.add("  과목명: " + examInfo.name);
-        examInfos.add("  시작 시간: " + examInfo.startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        examInfos.add("  종료 시간: " + examInfo.endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        examInfos.add("  문항 수: " + examInfo.count);
-        examInfos.add("  총점: " + examInfo.getTotalScore() + " 점");
-        List<String> userInfos = new ArrayList<>();
-        userInfos.add("응시자 정보");
-        userInfos.add("  id: " + userInfo.id);
-        userInfos.add("  이름: " + userInfo.name);
-        userInfos.add("  이메일: " + userInfo.email);
-        userInfos.add("  소속: " + userInfo.department);
-        List<String> notices = new FBEyeNotice().notices;
-        //여기까지
-
-        JList<String> userInfoListView = new JList<>(new Vector<>(userInfos));
+        JList<String> userInfoListView = new JList<>();
         Point location = ViewDisposer.getLocation(180, 130);
         Dimension size = ViewDisposer.getSize(490, 350);
         userInfoListView.setLocation(location);
@@ -73,7 +54,7 @@ public class ExamInfoPanel extends Page{
         userInfoListView.setVisible(true);
         panel.add(userInfoListView);
 
-        JList<String> examInfoListView = new JList<>(new Vector<>(examInfos));
+        JList<String> examInfoListView = new JList<>();
         location = ViewDisposer.getLocation(180, 520);
         examInfoListView.setLocation(location);
         examInfoListView.setSize(size);
@@ -82,7 +63,7 @@ public class ExamInfoPanel extends Page{
         examInfoListView.setVisible(true);
         panel.add(examInfoListView);
 
-        JList<String> noticeListView = new JList<>(new Vector<>(notices));
+        JList<String> noticeListView = new JList<>(new Vector<>(new FBEyeNotice().notices));
         location = ViewDisposer.getLocation(840, 130);
         size = ViewDisposer.getSize(510, 650);
         noticeListView.setLocation(location);
@@ -136,6 +117,14 @@ public class ExamInfoPanel extends Page{
                 list.remove(i);
             }
         }
+    }
+
+    private void examInfoReceived(){
+
+    }
+
+    private void userInfoReceived(){
+
     }
 
     private void onChecked(){

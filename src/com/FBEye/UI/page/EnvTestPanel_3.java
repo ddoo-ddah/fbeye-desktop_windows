@@ -9,7 +9,6 @@ import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
-import com.FBEye.util.DataExchanger;
 import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
@@ -113,7 +112,7 @@ public class EnvTestPanel_3 extends Page{
                 break;
             }
             if(list.get(i).destination == Destination.ENV_TEST_3 && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK")){
+                if(list.get(i).data.equals("OK")){
                     currentStep++;
                     if(currentStep == 0){
                         infoTextLabel.setVisible(false);
@@ -142,16 +141,16 @@ public class EnvTestPanel_3 extends Page{
 
     private void onTestButtonClicked(MouseEvent e){
         Point p = new Point(testButton.getX() + e.getX(), testButton.getY() + e.getY());
-        list.add(new Event(Destination.SERVER, EventDataType.COORDINATE, new DataExchanger<Point>().toByteArray(p)));
+        list.add(new Event(Destination.SERVER, EventDataType.COORDINATE, p));
 
         //test
-        list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
+        list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, "OK"));
     }
 
     private void onStartButtonClicked(){
-        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("StartTest")));
+        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, "StartTest"));
 
         //test
-        list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
+        list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, "OK"));
     }
 }

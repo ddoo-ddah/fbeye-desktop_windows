@@ -10,7 +10,6 @@ import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
-import com.FBEye.util.DataExchanger;
 import com.FBEye.util.QRGenerator;
 import com.FBEye.util.ViewDisposer;
 
@@ -93,14 +92,14 @@ public class EnvTestPanel_2 extends Page {
                 break;
             }
             if(list.get(i).destination == Destination.ENV_TEST_2 && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK") && !isTestStarted){
+                if(list.get(i).data.equals("OK") && !isTestStarted){
                     //startButton.setVisible(false); 실제 사용 시 주석 지우기
                     setQRCode();
                     panel.repaint();
                     isTestStarted = true;
                     list.remove(i);
                 }
-                else if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK")){
+                else if(list.get(i).data.equals("OK")){
                     list.remove(i);
                     list.add(new Event(Destination.ENV_TEST_3, EventDataType.NAVIGATE, null));
                     timer.cancel();
@@ -111,9 +110,9 @@ public class EnvTestPanel_2 extends Page {
     }
 
     private void onStartButtonClicked(){
-        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("StartTest")));
+        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, "StartTest"));
 
         //test
-        list.add(new Event(Destination.ENV_TEST_2, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("OK")));
+        list.add(new Event(Destination.ENV_TEST_2, EventDataType.SIGNAL, "OK"));
     }
 }

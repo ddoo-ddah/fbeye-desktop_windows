@@ -11,7 +11,6 @@ import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.net.Connection;
-import com.FBEye.util.DataExchanger;
 import com.FBEye.util.JsonMaker;
 import com.FBEye.util.JsonParser;
 import org.json.JSONObject;
@@ -53,7 +52,7 @@ public class FBEyeFrame {
         //connection = new Connection(list);
         mainFrame = new JFrame("FBEye");
         parameters = new ArrayList<>();
-        currentPage = Destination.ENV_TEST_4;
+        currentPage = Destination.EXAM_INFO_PAGE;
         targetPage = Destination.NONE;
         initMainFrame();
         timer = new Timer();
@@ -64,7 +63,7 @@ public class FBEyeFrame {
             }
         };
 
-        pageMap = new EnumMap<Destination, Page>(Destination.class);
+        pageMap = new EnumMap<>(Destination.class);
         pageMap.put(Destination.LOGIN_PAGE, new LoginPanel(list));
         pageMap.put(Destination.EXAM_INFO_PAGE, new ExamInfoPanel(list));
         pageMap.put(Destination.ENV_TEST_1, new EnvTestPanel_1(list));
@@ -112,23 +111,29 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.SERVER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    //connection.send(jsonMaker.makeJson(e.eventDataType, new DataExchanger<String>().fromByteArray(e.data)));
+                    //connection.send(jsonMaker.makeJson(e.eventDataType, e.data));
                 }
                 list.remove(i);
             }
             else if(list.get(i).destination == Destination.MANAGER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    List<Object> receivedData = jsonParser.parse(new JSONObject(new DataExchanger<String>().fromByteArray(e.data)));
-                    if((EventDataType)(receivedData.get(0)) == EventDataType.SIGNAL){
-                        list.add(new Event(currentPage, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray((String)receivedData.get(1))));
+                    List<Object> receivedData = jsonParser.parse(new JSONObject((String)e.data));
+                    if(receivedData.get(0) == EventDataType.SIGNAL){
+                        list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
+                    }
+                    else if(receivedData.get(0) == EventDataType.EXAM_INFO){
+                        //시험 정보 수령
+                    }
+                    else if(receivedData.get(0) == EventDataType.USER_INFO){
+                        //유저 정보 수령
                     }
                 }
                 list.remove(i);
             }
             else{
                 if(list.get(i).eventDataType == EventDataType.PARAMETER && list.get(i).data != null){
-                    parameters.add(new DataExchanger<>().fromByteArray(list.get(i).data));
+
                     list.remove(i);
                 }
                 else if(list.get(i).eventDataType == EventDataType.NAVIGATE){

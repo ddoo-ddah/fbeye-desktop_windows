@@ -9,7 +9,6 @@ import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
-import com.FBEye.util.DataExchanger;
 import org.json.JSONObject;
 
 import javax.net.ssl.*;
@@ -70,7 +69,7 @@ public class Connection {
                         int c = in.read();
                         receiveString += (char)c;
                     }while(in.available() > 0);
-                    list.add(new Event(Destination.MANAGER, EventDataType.HEADER, new DataExchanger<String>().toByteArray(receiveString)));
+                    list.add(new Event(Destination.MANAGER, EventDataType.HEADER, receiveString));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
