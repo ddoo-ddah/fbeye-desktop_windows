@@ -37,7 +37,6 @@ public class EnvTestPanel_1 extends Page {
                 restore();
             }
         };
-        timer.schedule(task, 100, 100);
     }
 
     @Override
@@ -84,14 +83,14 @@ public class EnvTestPanel_1 extends Page {
             timer.cancel();
         }
         else if(currentStep >= 1){
-            //panel.remove(startButton); //실제 사용 시 주석 해제
+            panel.remove(startButton);
             infoTextLabel.setText(infoTexts.get(currentStep));
             panel.repaint();
         }
     }
 
     private void onStartButtonClicked(){
-        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, "StartTest"));
+        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, "\"StartTest\""));
 
         //test
         list.add(new Event(Destination.ENV_TEST_1, EventDataType.SIGNAL, "OK"));

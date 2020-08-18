@@ -35,6 +35,14 @@ public abstract class Page {
     protected  abstract void setView();
     protected abstract void restore();
 
+    public void startTimer(){
+        timer.schedule(task, 100, 100);
+    }
+
+    public void endTimer(){
+        timer.cancel();
+    }
+
     public JPanel getPanel(){
         return panel;
     }

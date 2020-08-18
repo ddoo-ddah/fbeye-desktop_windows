@@ -53,7 +53,6 @@ public class ExamPanel extends Page{
                 restore();
             }
         };
-        timer.schedule(task, 100, 100);
     }
 
     @Override

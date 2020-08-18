@@ -52,7 +52,7 @@ public class EnvTestPanel_4 extends Page{
                 restore();
             }
         };
-        timer.schedule(task, 100, 100);
+
     }
 
     @Override
