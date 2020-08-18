@@ -10,6 +10,7 @@ import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
+import com.FBEye.util.SignalDataMaker;
 import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
@@ -90,9 +91,6 @@ public class EnvTestPanel_1 extends Page {
     }
 
     private void onStartButtonClicked(){
-        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, "\"StartTest\""));
-
-        //test
-        list.add(new Event(Destination.ENV_TEST_1, EventDataType.SIGNAL, "OK"));
+        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("startTest")));
     }
 }

@@ -20,6 +20,7 @@ public class JsonMaker {
     private void init(){
         typeString = new EnumMap<EventDataType, String>(EventDataType.class);
         typeString.put(EventDataType.LOGINCODE, "SIN");
+        typeString.put(EventDataType.SIGNAL, "SIG");
     }
 
     public JSONObject makeJson(EventDataType type, String data){

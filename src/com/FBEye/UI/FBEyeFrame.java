@@ -98,8 +98,8 @@ public class FBEyeFrame {
                 mainFrame.repaint();
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
             }
-            pageMap.get(currentPage).endTimer();
             pageMap.get(targetPage).startTimer();
+            pageMap.get(currentPage).endTimer();
             mainFrame.getContentPane().removeAll();
             mainFrame.add(pageMap.get(targetPage).getPanel());
             mainFrame.repaint();
@@ -114,7 +114,7 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.SERVER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    //connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
+                    connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
                 }
                 list.remove(i);
             }

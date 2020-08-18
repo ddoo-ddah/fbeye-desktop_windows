@@ -36,7 +36,7 @@ public abstract class Page {
     protected abstract void restore();
 
     public void startTimer(){
-        timer.schedule(task, 100, 100);
+        timer.schedule(task, 200, 200);
     }
 
     public void endTimer(){
