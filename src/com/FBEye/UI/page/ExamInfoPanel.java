@@ -17,20 +17,22 @@ import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 import java.util.Timer;
 
 public class ExamInfoPanel extends Page{
     private ExamInfo examInfo;
     private UserInfo userInfo;
 
+    private JList<String> userInfoListView;
+    private JList<String> examInfoListView;
     private JCheckBox readNoticeCheck;
     private JButton takeExamButton;
 
     public ExamInfoPanel(EventList list){
         super(list);
+        examInfo = null;
+        userInfo = null;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -44,7 +46,7 @@ public class ExamInfoPanel extends Page{
 
     @Override
     protected void setView(){
-        JList<String> userInfoListView = new JList<>();
+        userInfoListView = new JList<>();
         Point location = ViewDisposer.getLocation(180, 130);
         Dimension size = ViewDisposer.getSize(490, 350);
         userInfoListView.setLocation(location);
@@ -54,7 +56,7 @@ public class ExamInfoPanel extends Page{
         userInfoListView.setVisible(true);
         panel.add(userInfoListView);
 
-        JList<String> examInfoListView = new JList<>();
+        examInfoListView = new JList<>();
         location = ViewDisposer.getLocation(180, 520);
         examInfoListView.setLocation(location);
         examInfoListView.setSize(size);
@@ -109,22 +111,26 @@ public class ExamInfoPanel extends Page{
             if(list.get(i).destination == Destination.EXAM_INFO_PAGE && list.get(i).eventDataType != EventDataType.NAVIGATE){
                 Event e = list.get(i);
                 if(e.eventDataType == EventDataType.EXAM_INFO){
-
+                    examInfoReceived((ExamInfo) e.data);
                 }
                 else if(e.eventDataType == EventDataType.USER_INFO){
-
+                    userInfoReceived((UserInfo) e.data);
                 }
                 list.remove(i);
             }
         }
     }
 
-    private void examInfoReceived(){
-
+    private void examInfoReceived(ExamInfo examInfo){
+        this.examInfo = examInfo;
+        examInfoListView.setListData(this.examInfo.getInfoList());
+        panel.repaint();
     }
 
-    private void userInfoReceived(){
-
+    private void userInfoReceived(UserInfo userInfo){
+        this.userInfo = userInfo;
+        userInfoListView.setListData(this.userInfo.getInfoList());
+        panel.repaint();
     }
 
     private void onChecked(){

@@ -40,7 +40,7 @@ public class FBEyeFrame {
     public FBEyeFrame(){
         list = new EventList();
         init();
-        //connection.Connect();
+        connection.Connect();
         timer.schedule(task, 100, 100);
         mainFrame.add(pageMap.get(currentPage).getPanel());
         mainFrame.repaint();
@@ -49,10 +49,10 @@ public class FBEyeFrame {
     private void init(){
         jsonMaker = new JsonMaker();
         jsonParser = new JsonParser();
-        //connection = new Connection(list);
+        connection = new Connection(list);
         mainFrame = new JFrame("FBEye");
         parameters = new ArrayList<>();
-        currentPage = Destination.EXAM_INFO_PAGE;
+        currentPage = Destination.LOGIN_PAGE;
         targetPage = Destination.NONE;
         initMainFrame();
         timer = new Timer();
@@ -111,7 +111,7 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.SERVER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    //connection.send(jsonMaker.makeJson(e.eventDataType, e.data));
+                    connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
                 }
                 list.remove(i);
             }
@@ -123,10 +123,10 @@ public class FBEyeFrame {
                         list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
                     }
                     else if(receivedData.get(0) == EventDataType.EXAM_INFO){
-                        //시험 정보 수령
+                        list.add(new Event(currentPage, EventDataType.EXAM_INFO, receivedData.get(1)));
                     }
                     else if(receivedData.get(0) == EventDataType.USER_INFO){
-                        //유저 정보 수령
+                        list.add(new Event(currentPage, EventDataType.USER_INFO, receivedData.get(1)));
                     }
                 }
                 list.remove(i);

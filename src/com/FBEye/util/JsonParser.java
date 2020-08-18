@@ -5,33 +5,45 @@
  */
 package com.FBEye.util;
 
+import com.FBEye.datatype.UserInfo;
 import com.FBEye.datatype.event.EventDataType;
+import com.FBEye.datatype.examdata.ExamInfo;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JsonParser {
-    private Map<String, EventDataType> typeData;
-
     public JsonParser(){
         init();
     }
 
     private void init(){
-        typeData = new HashMap<>();
-        typeData.put("RES", EventDataType.SIGNAL);
     }
 
     public List<Object> parse(JSONObject jsonObject){
-        if(jsonObject.get("type").equals("RES")){
-            List<Object> result = new ArrayList<>();
+        String type = jsonObject.getString("type");
+        List<Object> result = new ArrayList<>();
+        if(type.equals("RES")){
             result.add(EventDataType.SIGNAL);
             result.add(jsonObject.get("data"));
-            return result;
         }
-        return null;
+        else if(type.equals("INF")){
+            result.add(EventDataType.EXAM_INFO);
+            JSONObject object = jsonObject.getJSONObject("data");
+            result.add(new ExamInfo(object.getString("title"), object.getString("admin"),
+                    object.getInt("count"), DateTimeMaker.make(object.getString("startTime")),
+                    DateTimeMaker.make(object.getString("endTime"))));
+        }
+        else if(type.equals("USRINF")){
+            result.add(EventDataType.USER_INFO);
+            JSONObject object = jsonObject.getJSONObject("data");
+            result.add(new UserInfo(object.getString("id"), object.getString("name"),
+                    object.getString("email")));
+        }
+        else{
+            return null;
+        }
+        return result;
     }
 }

@@ -5,16 +5,24 @@
  */
 package com.FBEye.datatype;
 
+import java.util.Vector;
+
 public class UserInfo {
-    public final int id;
+    public final String id;
     public final String name;
     public final String email;
-    public final String department;
     
-    public UserInfo(int id, String name, String email, String department){
+    public UserInfo(String id, String name, String email){
         this.id = id;
         this.name = name;
         this.email = email;
-        this.department = department;
+    }
+
+    public Vector<String> getInfoList(){
+        Vector<String> result = new Vector<>();
+        result.add("id: " + id);
+        result.add("이름: " + name);
+        result.add("이메일: " + email);
+        return result;
     }
 }
