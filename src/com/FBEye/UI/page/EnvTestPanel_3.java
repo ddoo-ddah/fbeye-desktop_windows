@@ -9,6 +9,7 @@ import com.FBEye.datatype.event.Destination;
 import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
+import com.FBEye.util.SignalDataMaker;
 import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
@@ -111,8 +112,9 @@ public class EnvTestPanel_3 extends Page{
             if(list.get(i) == null){
                 break;
             }
-            if(list.get(i).destination == Destination.ENV_TEST_3 && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(list.get(i).data.equals("OK")){
+            Event e = list.get(i);
+            if(e.destination == Destination.ENV_TEST_3 && e.eventDataType == EventDataType.SIGNAL){
+                if(e.data.equals("OK")){
                     currentStep++;
                     if(currentStep == 0){
                         infoTextLabel.setVisible(false);
@@ -140,17 +142,12 @@ public class EnvTestPanel_3 extends Page{
     }
 
     private void onTestButtonClicked(MouseEvent e){
-        Point p = new Point(testButton.getX() + e.getX(), testButton.getY() + e.getY());
-        list.add(new Event(Destination.SERVER, EventDataType.COORDINATE, p));
-
-        //test
-        list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, "OK"));
+        String result = "\"data\":{\n" + "\t\t\"x\":\"" + (testButton.getX() + e.getX()) + "\",\n" +
+                "\t\t\"y\":\"" + (testButton.getY() + e.getY()) + "\"\n" + "\t}";
+        list.add(new Event(Destination.SERVER, EventDataType.COORDINATE, result));
     }
 
     private void onStartButtonClicked(){
-        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, "StartTest"));
-
-        //test
-        list.add(new Event(Destination.ENV_TEST_3, EventDataType.SIGNAL, "OK"));
+        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("startTest")));
     }
 }
