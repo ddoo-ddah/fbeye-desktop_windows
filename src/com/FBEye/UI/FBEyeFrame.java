@@ -131,6 +131,9 @@ public class FBEyeFrame {
                     else if(receivedData.get(0) == EventDataType.USER_INFO){
                         list.add(new Event(currentPage, EventDataType.USER_INFO, receivedData.get(1)));
                     }
+                    else if(receivedData.get(0) == EventDataType.QR_CODE_DATA){
+                        list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
+                    }
                 }
                 list.remove(i);
             }

@@ -11,6 +11,7 @@ import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.util.QRGenerator;
+import com.FBEye.util.SignalDataMaker;
 import com.FBEye.util.ViewDisposer;
 
 import javax.swing.*;
@@ -60,23 +61,16 @@ public class EnvTestPanel_2 extends Page {
         });
         startButton.setVisible(true);
         panel.add(startButton);
-    }
 
-    private void setQRCode(){
-        //테스트 데이터
-        Dimension QRSize = ViewDisposer.getSize(70, 70);
-        int squaredQRSize = Math.min(QRSize.width, QRSize.height);
-        ImageIcon img = QRGenerator.generateQR("test", squaredQRSize, squaredQRSize);
-        //여기까지
-        topQRCode = new JLabel(img);
-        Point location = ViewDisposer.getLocation(715, 0);
-        Dimension size = ViewDisposer.getSize(70, 70);
+        topQRCode = new JLabel();
+        location = ViewDisposer.getLocation(715, 0);
+        size = ViewDisposer.getSize(70, 70);
         topQRCode.setLocation(location);
         topQRCode.setSize(size);
         topQRCode.setVisible(true);
         panel.add(topQRCode);
 
-        bottomQRCode = new JLabel(img);
+        bottomQRCode = new JLabel();
         location = ViewDisposer.getLocation(715, 920);
         bottomQRCode.setLocation(location);
         bottomQRCode.setSize(size);
@@ -90,28 +84,35 @@ public class EnvTestPanel_2 extends Page {
             if(list.get(i) == null){
                 break;
             }
-            if(list.get(i).destination == Destination.ENV_TEST_2 && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(list.get(i).data.equals("OK") && !isTestStarted){
-                    //startButton.setVisible(false); 실제 사용 시 주석 지우기
-                    setQRCode();
+            Event e = list.get(i);
+            if(e.destination == Destination.ENV_TEST_2 && e.eventDataType == EventDataType.SIGNAL){
+                if(e.data.equals("OK") && !isTestStarted){
+                    startButton.setVisible(false);
                     panel.repaint();
                     isTestStarted = true;
                     list.remove(i);
                 }
-                else if(list.get(i).data.equals("OK")){
+                else if(e.data.equals("OK")){
                     list.remove(i);
                     list.add(new Event(Destination.ENV_TEST_3, EventDataType.NAVIGATE, null));
-                    timer.cancel();
-                    break;
                 }
+            }
+            else if(e.destination == Destination.ENV_TEST_2 && e.eventDataType == EventDataType.QR_CODE_DATA){
+                QRDataReceived((String)e.data);
+                list.remove(i);
             }
         }
     }
 
-    private void onStartButtonClicked(){
-        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, "StartTest"));
+    private void QRDataReceived(String data){
+        Dimension QRSize = ViewDisposer.getSize(70, 70);
+        int squaredQRSize = Math.min(QRSize.width, QRSize.height);
+        ImageIcon img = QRGenerator.generateQR(data, squaredQRSize, squaredQRSize);
+        topQRCode.setIcon(img);
+        bottomQRCode.setIcon(img);
+    }
 
-        //test
-        list.add(new Event(Destination.ENV_TEST_2, EventDataType.SIGNAL, "OK"));
+    private void onStartButtonClicked(){
+        list.add(new com.FBEye.datatype.event.Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("startTest")));
     }
 }

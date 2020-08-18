@@ -41,6 +41,10 @@ public class JsonParser {
             result.add(new UserInfo(object.getString("id"), object.getString("name"),
                     object.getString("email")));
         }
+        else if(type.equals("AUT")){
+            result.add(EventDataType.QR_CODE_DATA);
+            result.add(jsonObject.get("data"));
+        }
         else{
             return null;
         }

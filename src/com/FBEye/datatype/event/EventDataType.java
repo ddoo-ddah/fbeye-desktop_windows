@@ -15,5 +15,6 @@ public enum EventDataType {
     PARAMETER,
     LOGINCODE,
     EXAM_INFO,
-    USER_INFO
+    USER_INFO,
+    QR_CODE_DATA
 }
