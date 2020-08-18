@@ -100,7 +100,7 @@ public class LoginPanel extends Page{
                 break;
             }
             if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("\"OK\"")){
+                if(new DataExchanger<>().fromByteArray(list.get(i).data).equals("OK")){
                     login();
                 }
                 else{
@@ -118,7 +118,5 @@ public class LoginPanel extends Page{
     private void onLoginButtonClicked(){
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
         list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, new DataExchanger<String>().toByteArray(loginData)));
-        //test
-        list.add(new Event(Destination.LOGIN_PAGE, EventDataType.SIGNAL, new DataExchanger<String>().toByteArray("\"OK\"")));
     }
 }

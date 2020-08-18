@@ -26,13 +26,10 @@ public class JsonParser {
     }
 
     public List<Object> parse(JSONObject jsonObject){
-        String jsonStr = jsonObject.toString();
-        String[] data = jsonStr.split("\\{|:|,|}");
-        if(data[data.length - 1].equals("\"RES\"")){
-            System.out.println(1);
+        if(jsonObject.get("type").equals("RES")){
             List<Object> result = new ArrayList<>();
             result.add(EventDataType.SIGNAL);
-            result.add(data[2]);
+            result.add(jsonObject.get("data"));
             return result;
         }
         return null;
