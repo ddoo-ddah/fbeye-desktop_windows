@@ -142,10 +142,7 @@ public class ExamPanel extends Page{
                 break;
             }
             Event e = list.get(i);
-            if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.PARAMETER){
-
-            }
-            else if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.CHAT){
+            if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.CHAT){
                    chatReceived((String)e.data);
             }
         }

@@ -137,15 +137,9 @@ public class FBEyeFrame {
                 }
                 list.remove(i);
             }
-            else{
-                if(list.get(i).eventDataType == EventDataType.PARAMETER && list.get(i).data != null){
-
-                    list.remove(i);
-                }
-                else if(list.get(i).eventDataType == EventDataType.NAVIGATE){
-                    targetPage = list.get(i).destination;
-                    list.remove(i);
-                }
+            else if(list.get(i).eventDataType == EventDataType.NAVIGATE){
+                targetPage = list.get(i).destination;
+                list.remove(i);
             }
         }
     }

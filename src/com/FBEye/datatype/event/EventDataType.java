@@ -12,7 +12,6 @@ public enum EventDataType {
     SIGNAL,
     COORDINATE,
     NAVIGATE,
-    PARAMETER,
     LOGINCODE,
     EXAM_INFO,
     USER_INFO,
