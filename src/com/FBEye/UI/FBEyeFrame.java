@@ -25,8 +25,10 @@ import java.util.Timer;
 
 public class FBEyeFrame {
     private Connection connection;
+    private Connection chatConnection;
     private JFrame mainFrame;
     private EventList list;
+    private EventList chatEventList;
     private Timer timer;
     private TimerTask task;
     private List<Object> parameters;
@@ -39,8 +41,10 @@ public class FBEyeFrame {
 
     public FBEyeFrame(){
         list = new EventList();
+        chatEventList = new EventList();
         init();
-        connection.Connect();
+        connection.Connect("localhost", 9000); //실제는 10100
+        chatConnection.Connect("localhost", 9000); //실제는 ?
         timer.schedule(task, 100, 100);
         mainFrame.add(pageMap.get(currentPage).getPanel());
         pageMap.get(currentPage).startTimer();
@@ -51,9 +55,10 @@ public class FBEyeFrame {
         jsonMaker = new JsonMaker();
         jsonParser = new JsonParser();
         connection = new Connection(list);
+        chatConnection = new Connection(chatEventList);
         mainFrame = new JFrame("FBEye");
         parameters = new ArrayList<>();
-        currentPage = Destination.LOGIN_PAGE;
+        currentPage = Destination.EXAM_PAGE;
         targetPage = Destination.NONE;
         initMainFrame();
         timer = new Timer();
@@ -116,7 +121,12 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.SERVER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
+                    if(e.eventDataType == EventDataType.CHAT){
+                        chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
+                    }
+                    else{
+                        connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
+                    }
                 }
                 list.remove(i);
             }
@@ -142,6 +152,27 @@ public class FBEyeFrame {
             else if(list.get(i).eventDataType == EventDataType.NAVIGATE){
                 targetPage = list.get(i).destination;
                 list.remove(i);
+            }
+        }
+
+        for(int i = 0; i < chatEventList.size(); i++){
+            if(chatEventList.get(i) == null){
+                break;
+            }
+            else if(chatEventList.get(i).destination == Destination.SERVER){
+                Event e = chatEventList.get(i);
+                if(e.data != null){
+                    chatConnection.send((String)e.data);
+                }
+                chatEventList.remove(i);
+            }
+            else if(chatEventList.get(i).destination == Destination.MANAGER){
+                Event e = chatEventList.get(i);
+                if(e.data != null &&
+                        (currentPage == Destination.ENV_TEST_4 || currentPage == Destination.EXAM_PAGE)){
+                    list.add(new Event(currentPage, EventDataType.CHAT, e.data));
+                }
+                chatEventList.remove(i);
             }
         }
     }

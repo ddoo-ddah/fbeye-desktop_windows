@@ -7,8 +7,6 @@ package com.FBEye.UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class BlankFrame {
     private JFrame frame;

@@ -25,7 +25,7 @@ public class Connection {
         this.list = list;
     }
 
-    public void Connect() {
+    public void Connect(String host, int port) {
         try {
             SSLContext context = SSLContext.getInstance("TLSv1.2");
             TrustManager[] trustManagers = new TrustManager[]{
@@ -48,7 +48,7 @@ public class Connection {
             context.init(null, trustManagers, new SecureRandom());
             SSLSocketFactory sslSocketFactory = context.getSocketFactory();
             String[] suites = sslSocketFactory.getSupportedCipherSuites();
-            sslSocket = (SSLSocket) sslSocketFactory.createSocket("localhost", 9000); //실제는 10100
+            sslSocket = (SSLSocket) sslSocketFactory.createSocket(host, port);
             sslSocket.setEnabledCipherSuites(suites);
             sslSocket.startHandshake();
             startRead();
@@ -85,6 +85,20 @@ public class Connection {
                 BufferedWriter bufferedwriter = new BufferedWriter(outputstreamwriter);
                 String string = data.toString();
                 bufferedwriter.write(string);
+                bufferedwriter.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void send(String data){
+        try {
+            if (sslSocket.isConnected()) {
+                OutputStream outputstream = sslSocket.getOutputStream();
+                OutputStreamWriter outputstreamwriter = new OutputStreamWriter(outputstream);
+                BufferedWriter bufferedwriter = new BufferedWriter(outputstreamwriter);
+                bufferedwriter.write(data);
                 bufferedwriter.flush();
             }
         } catch (Exception e) {
