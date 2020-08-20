@@ -17,10 +17,10 @@ public class AnswerTypeConverter {
             result.append("\t\t{\n");
             result.append("\t\t\t\"_Id\":\"");
             result.append(answers.get(i).getNumber());
-            result.append("\"\n");
+            result.append("\",\n");
             result.append("\t\t\t\"answer\":\"");
             result.append(answers.get(i).getAnswer());
-            result.append("\"\n\t\t}\n");
+            result.append("\"\n\t\t},\n");
         }
         result.append("\t]");
         return result.toString();

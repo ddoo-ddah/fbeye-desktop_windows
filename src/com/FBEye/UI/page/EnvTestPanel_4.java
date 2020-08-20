@@ -115,6 +115,7 @@ public class EnvTestPanel_4 extends Page{
     }
 
     private void moveQuestion(){
+        examMainPanel.saveAnswer(AnswerState.SOLVED);
         examMainPanel.setPrevNumber(questionNumberPanel.getPrevNumber());
         examMainPanel.setCurrentNumber(questionNumberPanel.getCurrentNumber());
         examMainPanel.controlQuestion();
@@ -159,17 +160,16 @@ public class EnvTestPanel_4 extends Page{
                 }
                 else if(e.eventDataType == EventDataType.QUESTION_KEY){
                     try{
-                        encryptedQuestion = Decryptor.decrypt(encryptedQuestion,
-                                new SecretKeySpec(((String)e.data).getBytes("UTF-8"), "AES"));
+                        encryptedQuestion = Decryptor.decrypt(encryptedQuestion, (String)e.data);
                     }catch (Exception exception){
                         exception.printStackTrace();
                     }
                     List<QuestionInfo> questions = QuestionMaker.makeQuestion(new JSONObject(encryptedQuestion));
                     if(questions.size() != 0){
-                        isDecrypted = true;
                         ExamInfo newExamInfo = new ExamInfo(examInfo.name, examInfo.admin, examInfo.count,
                                 examInfo.startTime, examInfo.endTime, questions);
                         list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
+                        isDecrypted = true;
                     }
 
                 }

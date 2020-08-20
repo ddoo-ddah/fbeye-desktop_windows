@@ -91,6 +91,7 @@ public class ExamPanel extends Page{
     }
 
     private void moveQuestion(){
+        examMainPanel.saveAnswer(AnswerState.SOLVED);
         examMainPanel.setPrevNumber(questionNumberPanel.getPrevNumber());
         examMainPanel.setCurrentNumber(questionNumberPanel.getCurrentNumber());
         examMainPanel.controlQuestion();
@@ -107,20 +108,6 @@ public class ExamPanel extends Page{
 
     @Override
     protected void restore(){
-        if(examMainPanel.getIsChanged()) {
-            setQuestionNumberBackground();
-        }
-        if(questionNumberPanel.getIsChanged()){
-            moveQuestion();
-        }
-        if(chatPanel.getSendChat()){
-            String chat = chatPanel.getChatContent();
-            list.add(new Event(Destination.SERVER, EventDataType.CHAT, chat));
-            chatPanel.setSendChat(false);
-            chatPanel.resetChatContent();
-            chatPanel.getPanel().repaint();
-        }
-
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 list.remove(i);
@@ -139,6 +126,20 @@ public class ExamPanel extends Page{
                 }
                 list.remove(i);
             }
+        }
+
+        if(examMainPanel.getIsChanged()) {
+            setQuestionNumberBackground();
+        }
+        if(questionNumberPanel.getIsChanged()){
+            moveQuestion();
+        }
+        if(chatPanel.getSendChat()){
+            String chat = chatPanel.getChatContent();
+            list.add(new Event(Destination.SERVER, EventDataType.CHAT, chat));
+            chatPanel.setSendChat(false);
+            chatPanel.resetChatContent();
+            chatPanel.getPanel().repaint();
         }
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -169,7 +170,8 @@ public class ExamPanel extends Page{
     private void endTest(){
         examMainPanel.saveAnswer(AnswerState.SOLVED);
         list.add(new Event(Destination.SERVER, EventDataType.ANSWER, AnswerTypeConverter.convert(examMainPanel.getAnswer())));
-        list.add(new Event(Destination.LOGIN_PAGE, EventDataType.NAVIGATE, null));
+        JOptionPane.showMessageDialog(panel, "수고하셨습니다.", "제출", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0);
     }
 
     private void onSubmissionButtonClicked(){

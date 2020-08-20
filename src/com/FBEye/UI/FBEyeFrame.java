@@ -58,7 +58,7 @@ public class FBEyeFrame {
         chatConnection = new Connection(chatEventList);
         mainFrame = new JFrame("FBEye");
         parameters = new ArrayList<>();
-        currentPage = Destination.EXAM_PAGE;
+        currentPage = Destination.LOGIN_PAGE;
         targetPage = Destination.NONE;
         initMainFrame();
         timer = new Timer();
@@ -105,8 +105,8 @@ public class FBEyeFrame {
                 mainFrame.repaint();
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
             }
-            pageMap.get(targetPage).startTimer();
             pageMap.get(currentPage).endTimer();
+            pageMap.get(targetPage).startTimer();
             mainFrame.getContentPane().removeAll();
             mainFrame.add(pageMap.get(targetPage).getPanel());
             mainFrame.repaint();
@@ -145,6 +145,12 @@ public class FBEyeFrame {
                     }
                     else if(receivedData.get(0) == EventDataType.QR_CODE_DATA){
                         list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
+                    }
+                    else if(receivedData.get(0) == EventDataType.ENCRYPTED_QUESTION){
+                        list.add(new Event(currentPage, EventDataType.ENCRYPTED_QUESTION, receivedData.get(1)));
+                    }
+                    else if(receivedData.get(0) == EventDataType.QUESTION_KEY){
+                        list.add(new Event(currentPage, EventDataType.QUESTION_KEY, receivedData.get(1)));
                     }
                 }
                 list.remove(i);

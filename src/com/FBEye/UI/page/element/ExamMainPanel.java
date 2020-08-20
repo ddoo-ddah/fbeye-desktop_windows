@@ -215,7 +215,7 @@ public class ExamMainPanel {
         else if(currentQuestion.type == QuestionType.ONE_CHOICE){
             int selectedIndex = optionList.getSelectedIndex();
             if(selectedIndex != -1){
-                answers.get(currentNumber).setAnswer(Integer.toString(selectedIndex) + 1);
+                answers.get(currentNumber).setAnswer(Integer.toString(selectedIndex + 1));
                 answers.get(currentNumber).setState(state);
             }
         }
@@ -224,7 +224,7 @@ public class ExamMainPanel {
             if(selectedIndexList.length != 0){
                 String answer = "";
                 for(int i = 0; i < selectedIndexList.length; i++){
-                    answer += (Integer.toString(selectedIndexList[i]) + 1);
+                    answer += (Integer.toString(selectedIndexList[i] + 1));
                     if(i != selectedIndexList.length - 1){
                         answer += ",";
                     }

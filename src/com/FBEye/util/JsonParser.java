@@ -10,6 +10,7 @@ import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.examdata.ExamInfo;
 import org.json.JSONObject;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,14 @@ public class JsonParser {
         else if(type.equals("AUT")){
             result.add(EventDataType.QR_CODE_DATA);
             result.add(jsonObject.get("data"));
+        }
+        else if(type.equals("QUE")){
+            result.add(EventDataType.ENCRYPTED_QUESTION);
+            result.add(jsonObject.getString("data"));
+        }
+        else if(type.equals("KEY")){
+            result.add(EventDataType.QUESTION_KEY);
+            result.add(jsonObject.getString("data"));
         }
         else{
             return null;
