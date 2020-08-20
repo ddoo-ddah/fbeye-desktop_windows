@@ -115,6 +115,6 @@ public class LoginPanel extends Page{
 
     private void onLoginButtonClicked(){
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
-        list.add(new Event(Destination.SERVER, EventDataType.LOGINCODE, loginData));
+        list.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, loginData));
     }
 }

@@ -164,13 +164,13 @@ public class ExamPanel extends Page{
         }
         for(int i = 0; i < 9; i++){
             if(i < 3){
-                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, (i + 1) + "번 문제", 1));
+                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, (i + 1) + "번 문제"));
             }
             else if(i < 6){
-                questions.add(new QuestionInfo(i + 1, QuestionType.ONE_CHOICE, (i + 1) + "번 문제", options, 1));
+                questions.add(new QuestionInfo(i + 1, QuestionType.ONE_CHOICE, (i + 1) + "번 문제", options));
             }
             else{
-                questions.add(new QuestionInfo(i + 1, QuestionType.MULTIPLE_CHOICE, (i + 1) + "번 문제", options, 1));
+                questions.add(new QuestionInfo(i + 1, QuestionType.MULTIPLE_CHOICE, (i + 1) + "번 문제", options));
             }
         }
         examInfo = new ExamInfo("test exam", 9, questions);

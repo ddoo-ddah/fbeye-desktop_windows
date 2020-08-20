@@ -12,21 +12,18 @@ public class QuestionInfo {
     public final QuestionType type;
     public final String question;
     public final List<String> options;
-    public final int score;
 
-    public QuestionInfo(int questionNumber, QuestionType type, String question, int score){
+    public QuestionInfo(int questionNumber, QuestionType type, String question){
         this.questionNumber = questionNumber;
         this.type = type;
         this.question = question;
         options = null;
-        this.score = score;
     }
 
-    public QuestionInfo(int questionNumber, QuestionType type, String question, List<String> options, int score){
+    public QuestionInfo(int questionNumber, QuestionType type, String question, List<String> options){
         this.questionNumber = questionNumber;
         this.type = type;
         this.question = question;
         this.options = options;
-        this.score = score;
     }
 }

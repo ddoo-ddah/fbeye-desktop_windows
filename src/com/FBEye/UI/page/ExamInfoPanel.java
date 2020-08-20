@@ -124,6 +124,7 @@ public class ExamInfoPanel extends Page{
     private void examInfoReceived(ExamInfo examInfo){
         this.examInfo = examInfo;
         examInfoListView.setListData(this.examInfo.getInfoList());
+        list.add(new Event(Destination.ENV_TEST_4, EventDataType.EXAM_INFO, examInfo));
         panel.repaint();
     }
 
@@ -140,6 +141,7 @@ public class ExamInfoPanel extends Page{
     }
 
     private void onButtonPressed() {
-        list.add(new Event(Destination.ENV_TEST_1, EventDataType.NAVIGATE, null));
+        //list.add(new Event(Destination.ENV_TEST_1, EventDataType.NAVIGATE, null));
+        list.add(new Event(Destination.ENV_TEST_4, EventDataType.NAVIGATE, null));//test
     }
 }

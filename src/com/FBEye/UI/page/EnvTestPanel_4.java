@@ -11,9 +11,13 @@ import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.datatype.examdata.*;
+import com.FBEye.util.Decryptor;
 import com.FBEye.util.QRGenerator;
+import com.FBEye.util.QuestionMaker;
 import com.FBEye.util.ViewDisposer;
+import org.json.JSONObject;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
 import java.awt.*;
 import java.time.Duration;
@@ -25,12 +29,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class EnvTestPanel_4 extends Page{
-    private final double QR_CHANGE_CYCLE = 3;
-
+    private ExamInfo sampleExamInfo;
     private ExamInfo examInfo;
-    private double QRChangeTime;
     private int squaredQRSize;
-    private int data = 0; //test
+    private String encryptedQuestion;
+    private boolean isDecrypted;
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -43,7 +46,7 @@ public class EnvTestPanel_4 extends Page{
 
     public EnvTestPanel_4(EventList list){
         super(list);
-        QRChangeTime = 0;
+        isDecrypted = false;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -59,14 +62,13 @@ public class EnvTestPanel_4 extends Page{
     protected void setView(){
         Dimension QRSize = ViewDisposer.getSize(70, 70);
         squaredQRSize = Math.min(QRSize.width, QRSize.height);
-        ImageIcon img = QRGenerator.generateQR(Double.toString(QRChangeTime), squaredQRSize, squaredQRSize);
-        topQRCode = new JLabel(img);
+        topQRCode = new JLabel();
         topQRCode.setLocation(ViewDisposer.getLocation(715, 0));
         topQRCode.setSize(QRSize);
         topQRCode.setVisible(true);
         panel.add(topQRCode);
 
-        bottomQRCode = new JLabel(img);
+        bottomQRCode = new JLabel();
         bottomQRCode.setLocation(ViewDisposer.getLocation(715, 928));
         bottomQRCode.setSize(QRSize);
         bottomQRCode.setVisible(true);
@@ -78,9 +80,9 @@ public class EnvTestPanel_4 extends Page{
         memoPanel = new MemoPanel(1130, 225);
         panel.add(memoPanel.getPanel());
         generateSampleData();
-        examMainPanel = new ExamMainPanel(375, 70, examInfo);
+        examMainPanel = new ExamMainPanel(375, 70, sampleExamInfo);
         panel.add(examMainPanel.getPanel());
-        questionNumberPanel = new QuestionNumberPanel(70, 70, examInfo.count);
+        questionNumberPanel = new QuestionNumberPanel(70, 70, sampleExamInfo.count);
         panel.add(questionNumberPanel.getPanel());
         chatPanel = new ChatPanel(70, 475);
         panel.add(chatPanel.getPanel());
@@ -98,20 +100,35 @@ public class EnvTestPanel_4 extends Page{
         panel.add(startTestButton);
     }
 
+    private void setQRCode(String data){
+        ImageIcon img = QRGenerator.generateQR(data, squaredQRSize, squaredQRSize);
+        topQRCode.setIcon(img);
+        bottomQRCode.setIcon(img);
+        panel.repaint();
+    }
+
+    private void setQuestionNumberBackground(){
+        questionNumberPanel.setPrevNumber(examMainPanel.getPrevNumber());
+        questionNumberPanel.setCurrentNumber(examMainPanel.getCurrentNumber());
+        questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
+        examMainPanel.setIsChanged(false);
+    }
+
+    private void moveQuestion(){
+        examMainPanel.setPrevNumber(questionNumberPanel.getPrevNumber());
+        examMainPanel.setCurrentNumber(questionNumberPanel.getCurrentNumber());
+        examMainPanel.controlQuestion();
+        questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
+        questionNumberPanel.setIsChanged(false);
+    }
+
     @Override
     protected void restore(){
         if(examMainPanel.getIsChanged()) {
-            questionNumberPanel.setPrevNumber(examMainPanel.getPrevNumber());
-            questionNumberPanel.setCurrentNumber(examMainPanel.getCurrentNumber());
-            questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
-            examMainPanel.setIsChanged(false);
+            setQuestionNumberBackground();
         }
         if(questionNumberPanel.getIsChanged()){
-            examMainPanel.setPrevNumber(questionNumberPanel.getPrevNumber());
-            examMainPanel.setCurrentNumber(questionNumberPanel.getCurrentNumber());
-            examMainPanel.controlQuestion();
-            questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
-            questionNumberPanel.setIsChanged(false);
+            moveQuestion();
         }
         if(chatPanel.getSendChat()){
             String chat = chatPanel.getChatContent();
@@ -119,6 +136,45 @@ public class EnvTestPanel_4 extends Page{
             chatPanel.setSendChat(false);
             chatPanel.resetChatContent();
             chatPanel.getPanel().repaint();
+        }
+
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i) == null){
+                list.remove(i);
+                break;
+            }
+            Event e = list.get(i);
+            if(e.destination == Destination.ENV_TEST_4){
+                if(e.eventDataType == EventDataType.CHAT){
+                    chatReceived((String)e.data);
+                }
+                else if(e.eventDataType == EventDataType.EXAM_INFO){
+                    examInfoReceived((ExamInfo) e.data);
+                }
+                else if(e.eventDataType == EventDataType.QR_CODE_DATA){
+                    setQRCode((String)e.data);
+                }
+                else if(e.eventDataType == EventDataType.ENCRYPTED_QUESTION){
+                    encryptedQuestion = (String)e.data;
+                }
+                else if(e.eventDataType == EventDataType.QUESTION_KEY){
+                    try{
+                        encryptedQuestion = Decryptor.decrypt(encryptedQuestion,
+                                new SecretKeySpec(((String)e.data).getBytes("UTF-8"), "AES"));
+                    }catch (Exception exception){
+                        exception.printStackTrace();
+                    }
+                    List<QuestionInfo> questions = QuestionMaker.makeQuestion(new JSONObject(encryptedQuestion));
+                    if(questions.size() != 0){
+                        isDecrypted = true;
+                        ExamInfo newExamInfo = new ExamInfo(examInfo.name, examInfo.admin, examInfo.count,
+                                examInfo.startTime, examInfo.endTime, questions);
+                        list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
+                    }
+
+                }
+                list.remove(i);
+            }
         }
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -137,36 +193,16 @@ public class EnvTestPanel_4 extends Page{
         else{
             timePanel.setTime(startDuration.toHours() + ":" + startDuration.toMinutesPart() + ":" + startDuration.toSecondsPart());
         }
-
-        if(QRChangeTime >= QR_CHANGE_CYCLE){
-            ImageIcon img = QRGenerator.generateQR(Integer.toString(++data), squaredQRSize, squaredQRSize);
-            topQRCode.setIcon(img);
-            bottomQRCode.setIcon(img);
-            panel.repaint();
-            QRChangeTime = 0;
-        }
-
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i) == null){
-                list.remove(i);
-                break;
-            }
-            Event e = list.get(i);
-            if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.PARAMETER){
-
-            }
-            else if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.CHAT){
-                chatReceived((String)e.data);
-            }
-        }
-
-        QRChangeTime += 0.1;
     }
 
     private void chatReceived(String chat){
         chatPanel.addChatLog(chat);
         chatPanel.resetChatContent();
         chatPanel.getPanel().repaint();
+    }
+
+    private void examInfoReceived(ExamInfo examInfo){
+        this.examInfo = examInfo;
     }
 
     private void generateSampleData(){
@@ -177,29 +213,31 @@ public class EnvTestPanel_4 extends Page{
         }
         for(int i = 0; i < 3; i++){
             if(i == 0){
-                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, (i + 1) + ".서술형 문제", 1));
+                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, (i + 1) + ".서술형 문제"));
             }
             else if(i == 1){
-                questions.add(new QuestionInfo(i + 1, QuestionType.ONE_CHOICE, (i + 1) + ".객관식 문제", options, 1));
+                questions.add(new QuestionInfo(i + 1, QuestionType.ONE_CHOICE, (i + 1) + ".객관식 문제", options));
             }
             else{
-                questions.add(new QuestionInfo(i + 1, QuestionType.MULTIPLE_CHOICE, (i + 1) + ".객관식 다수 선택 문제", options, 1));
+                questions.add(new QuestionInfo(i + 1, QuestionType.MULTIPLE_CHOICE, (i + 1) + ".객관식 다수 선택 문제", options));
             }
         }
-        examInfo = new ExamInfo("test exam", 3, questions);
+        sampleExamInfo = new ExamInfo("test exam", 3, questions);
+    }
+
+    private void onStartTestButtonClicked(){
+        startTest();
     }
 
     private void startTest(){
-        timer.cancel();
-        list.add(new Event(Destination.EXAM_PAGE, EventDataType.NAVIGATE, null));
+        if(isDecrypted){
+            timer.cancel();
+            list.add(new Event(Destination.EXAM_PAGE, EventDataType.NAVIGATE, null));
+        }
     }
 
     private void endTest(){
         examMainPanel.saveAnswer(AnswerState.SOLVED);
         list.add(new Event(Destination.LOGIN_PAGE, EventDataType.NAVIGATE, null));
-    }
-
-    private void onStartTestButtonClicked(){
-        startTest();
     }
 }
