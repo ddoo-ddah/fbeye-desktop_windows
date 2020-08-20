@@ -22,6 +22,7 @@ public class JsonMaker {
         typeString.put(EventDataType.LOGIN_CODE, "SIN");
         typeString.put(EventDataType.SIGNAL, "SIG");
         typeString.put(EventDataType.COORDINATE, "BTN");
+        typeString.put(EventDataType.ANSWER, "ANS");
     }
 
     public JSONObject makeJson(EventDataType type, String data){

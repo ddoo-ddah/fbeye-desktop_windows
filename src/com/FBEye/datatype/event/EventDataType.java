@@ -18,5 +18,4 @@ public enum EventDataType {
     QR_CODE_DATA,
     ENCRYPTED_QUESTION,
     QUESTION_KEY,
-    DECRYPTED_QUESTION
 }

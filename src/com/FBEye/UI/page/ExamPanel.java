@@ -11,6 +11,7 @@ import com.FBEye.datatype.event.Event;
 import com.FBEye.datatype.event.EventDataType;
 import com.FBEye.datatype.event.EventList;
 import com.FBEye.datatype.examdata.*;
+import com.FBEye.util.AnswerTypeConverter;
 import com.FBEye.util.QRGenerator;
 import com.FBEye.util.ViewDisposer;
 
@@ -19,19 +20,12 @@ import java.awt.*;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ExamPanel extends Page{
-    private final double QR_CHANGE_CYCLE = 3;
-
     private ExamInfo examInfo;
-    private List<AnswerInfo> answers;
-    private double QRChangeTime;
     private int squaredQRSize;
-    private int data = 0; //test
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -44,7 +38,6 @@ public class ExamPanel extends Page{
 
     public ExamPanel(EventList list){
         super(list);
-        QRChangeTime = 0;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -59,14 +52,13 @@ public class ExamPanel extends Page{
     protected void setView(){
         Dimension QRSize = ViewDisposer.getSize(70, 70);
         squaredQRSize = Math.min(QRSize.width, QRSize.height);
-        ImageIcon img = QRGenerator.generateQR(Double.toString(QRChangeTime), squaredQRSize, squaredQRSize);
-        topQRCode = new JLabel(img);
+        topQRCode = new JLabel();
         topQRCode.setLocation(ViewDisposer.getLocation(715, 0));
         topQRCode.setSize(QRSize);
         topQRCode.setVisible(true);
         panel.add(topQRCode);
 
-        bottomQRCode = new JLabel(img);
+        bottomQRCode = new JLabel();
         bottomQRCode.setLocation(ViewDisposer.getLocation(715, 928));
         bottomQRCode.setSize(QRSize);
         bottomQRCode.setVisible(true);
@@ -76,11 +68,6 @@ public class ExamPanel extends Page{
         panel.add(timePanel.getPanel());
         memoPanel = new MemoPanel(1130, 225);
         panel.add(memoPanel.getPanel());
-        generateTestData(); //test
-        examMainPanel = new ExamMainPanel(375, 70, examInfo);
-        panel.add(examMainPanel.getPanel());
-        questionNumberPanel = new QuestionNumberPanel(70, 70, examInfo.count);
-        panel.add(questionNumberPanel.getPanel());
         chatPanel = new ChatPanel(70, 475);
         panel.add(chatPanel.getPanel());
 
@@ -96,20 +83,35 @@ public class ExamPanel extends Page{
         panel.add(submissionButton);
     }
 
+    private void setQuestionNumberBackground(){
+        questionNumberPanel.setPrevNumber(examMainPanel.getPrevNumber());
+        questionNumberPanel.setCurrentNumber(examMainPanel.getCurrentNumber());
+        questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
+        examMainPanel.setIsChanged(false);
+    }
+
+    private void moveQuestion(){
+        examMainPanel.setPrevNumber(questionNumberPanel.getPrevNumber());
+        examMainPanel.setCurrentNumber(questionNumberPanel.getCurrentNumber());
+        examMainPanel.controlQuestion();
+        questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
+        questionNumberPanel.setIsChanged(false);
+    }
+
+    private void setQRCode(String data){
+        ImageIcon img = QRGenerator.generateQR(data, squaredQRSize, squaredQRSize);
+        topQRCode.setIcon(img);
+        bottomQRCode.setIcon(img);
+        panel.repaint();
+    }
+
     @Override
     protected void restore(){
         if(examMainPanel.getIsChanged()) {
-            questionNumberPanel.setPrevNumber(examMainPanel.getPrevNumber());
-            questionNumberPanel.setCurrentNumber(examMainPanel.getCurrentNumber());
-            questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
-            examMainPanel.setIsChanged(false);
+            setQuestionNumberBackground();
         }
         if(questionNumberPanel.getIsChanged()){
-            examMainPanel.setPrevNumber(questionNumberPanel.getPrevNumber());
-            examMainPanel.setCurrentNumber(questionNumberPanel.getCurrentNumber());
-            examMainPanel.controlQuestion();
-            questionNumberPanel.controlNumber(examMainPanel.getState(examMainPanel.getPrevNumber()));
-            questionNumberPanel.setIsChanged(false);
+            moveQuestion();
         }
         if(chatPanel.getSendChat()){
             String chat = chatPanel.getChatContent();
@@ -117,6 +119,26 @@ public class ExamPanel extends Page{
             chatPanel.setSendChat(false);
             chatPanel.resetChatContent();
             chatPanel.getPanel().repaint();
+        }
+
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i) == null){
+                list.remove(i);
+                break;
+            }
+            Event e = list.get(i);
+            if(e.destination == Destination.EXAM_PAGE){
+                if(e.eventDataType == EventDataType.EXAM_INFO){
+                    examInfoReceived((ExamInfo)e.data);
+                }
+                else if(e.eventDataType == EventDataType.QR_CODE_DATA){
+                    setQRCode((String)e.data);
+                }
+                else if(e.eventDataType == EventDataType.CHAT){
+                    chatReceived((String)e.data);
+                }
+                list.remove(i);
+            }
         }
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -127,27 +149,6 @@ public class ExamPanel extends Page{
             endTest();
         }
         timePanel.setTime(duration.toHours() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart());
-
-        if(QRChangeTime >= QR_CHANGE_CYCLE){
-            ImageIcon img = QRGenerator.generateQR(Integer.toString(++data), squaredQRSize, squaredQRSize);
-            topQRCode.setIcon(img);
-            bottomQRCode.setIcon(img);
-            panel.repaint();
-            QRChangeTime = 0;
-        }
-
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i) == null){
-                list.remove(i);
-                break;
-            }
-            Event e = list.get(i);
-            if(e.destination == Destination.EXAM_PAGE && e.eventDataType == EventDataType.CHAT){
-                   chatReceived((String)e.data);
-            }
-        }
-
-        QRChangeTime += 0.1;
     }
 
     private void chatReceived(String chat){
@@ -156,29 +157,18 @@ public class ExamPanel extends Page{
         chatPanel.getPanel().repaint();
     }
 
-    private void generateTestData(){  //이 함수는 테스트 데이터 생성용
-        List<QuestionInfo> questions = new ArrayList<>();
-        List<String> options = new ArrayList<>();
-        for(int i = 0; i < 5; i++){
-            options.add((i + 1) + "번 보기");
-        }
-        for(int i = 0; i < 9; i++){
-            if(i < 3){
-                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, (i + 1) + "번 문제"));
-            }
-            else if(i < 6){
-                questions.add(new QuestionInfo(i + 1, QuestionType.ONE_CHOICE, (i + 1) + "번 문제", options));
-            }
-            else{
-                questions.add(new QuestionInfo(i + 1, QuestionType.MULTIPLE_CHOICE, (i + 1) + "번 문제", options));
-            }
-        }
-        examInfo = new ExamInfo("test exam", 9, questions);
+    private void examInfoReceived(ExamInfo examInfo){
+        this.examInfo = examInfo;
+        examMainPanel = new ExamMainPanel(375, 70, examInfo);
+        panel.add(examMainPanel.getPanel());
+        questionNumberPanel = new QuestionNumberPanel(70, 70, examInfo.count);
+        panel.add(questionNumberPanel.getPanel());
+        panel.repaint();
     }
 
     private void endTest(){
         examMainPanel.saveAnswer(AnswerState.SOLVED);
-        list.add(new Event(Destination.SERVER, EventDataType.ANSWER, examMainPanel.getAnswers()));
+        list.add(new Event(Destination.SERVER, EventDataType.ANSWER, AnswerTypeConverter.convert(examMainPanel.getAnswer())));
         list.add(new Event(Destination.LOGIN_PAGE, EventDataType.NAVIGATE, null));
     }
 

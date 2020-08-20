@@ -16,6 +16,10 @@ public class AnswerInfo {
         state = AnswerState.NOT_SOLVED;
     }
 
+    public int getNumber(){
+        return number;
+    }
+
     public String getAnswer() {
         return answer;
     }

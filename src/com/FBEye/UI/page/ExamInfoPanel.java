@@ -141,7 +141,6 @@ public class ExamInfoPanel extends Page{
     }
 
     private void onButtonPressed() {
-        //list.add(new Event(Destination.ENV_TEST_1, EventDataType.NAVIGATE, null));
-        list.add(new Event(Destination.ENV_TEST_4, EventDataType.NAVIGATE, null));//test
+        list.add(new Event(Destination.ENV_TEST_1, EventDataType.NAVIGATE, null));
     }
 }

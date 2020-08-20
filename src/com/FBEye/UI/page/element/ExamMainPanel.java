@@ -174,7 +174,7 @@ public class ExamMainPanel {
             optionList.setVisible(true);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
-                optionList.setSelectedIndex(Integer.parseInt(answer));
+                optionList.setSelectedIndex(Integer.parseInt(answer) - 1);
             }
             else{
                 optionList.setSelectedIndex(-1);
@@ -192,7 +192,7 @@ public class ExamMainPanel {
                 String[] str = answer.split(",");
                 int[] indices = new int[str.length];
                 for(int i = 0; i < str.length; i++) {
-                    indices[i] = Integer.parseInt(str[i]);
+                    indices[i] = (Integer.parseInt(str[i]) - 1);
                 }
                 optionList.setSelectedIndices(indices);
             }
@@ -215,7 +215,7 @@ public class ExamMainPanel {
         else if(currentQuestion.type == QuestionType.ONE_CHOICE){
             int selectedIndex = optionList.getSelectedIndex();
             if(selectedIndex != -1){
-                answers.get(currentNumber).setAnswer(Integer.toString(selectedIndex));
+                answers.get(currentNumber).setAnswer(Integer.toString(selectedIndex) + 1);
                 answers.get(currentNumber).setState(state);
             }
         }
@@ -224,7 +224,7 @@ public class ExamMainPanel {
             if(selectedIndexList.length != 0){
                 String answer = "";
                 for(int i = 0; i < selectedIndexList.length; i++){
-                    answer += Integer.toString(selectedIndexList[i]);
+                    answer += (Integer.toString(selectedIndexList[i]) + 1);
                     if(i != selectedIndexList.length - 1){
                         answer += ",";
                     }
@@ -281,17 +281,8 @@ public class ExamMainPanel {
         return answers.get(index).getState();
     }
 
-    public String getAnswers(){
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < answers.size(); i++){
-            if(answers.get(i).getAnswer() != null && !answers.get(i).getAnswer().equals("")){
-                sb.append(i + 1);
-                sb.append("#");
-                sb.append(answers.get(i).getAnswer());
-                sb.append("|");
-            }
-        }
-        return sb.toString();
+    public List<AnswerInfo> getAnswer(){
+        return answers;
     }
 
     public void setCurrentNumber(int currentNumber){
