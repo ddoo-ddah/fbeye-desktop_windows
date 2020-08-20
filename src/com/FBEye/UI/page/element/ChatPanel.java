@@ -5,7 +5,6 @@
  */
 package com.FBEye.UI.page.element;
 
-import com.FBEye.datatype.ChatInfo;
 import com.FBEye.util.DisabledItemSelectionModel;
 import com.FBEye.util.ViewDisposer;
 
