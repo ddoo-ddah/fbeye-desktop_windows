@@ -83,6 +83,7 @@ public class FBEyeFrame {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         mainFrame.setAlwaysOnTop(true);
+        mainFrame.setUndecorated(true);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowIconified(WindowEvent e) {

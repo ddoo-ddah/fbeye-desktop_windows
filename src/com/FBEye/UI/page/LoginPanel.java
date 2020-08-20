@@ -18,13 +18,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class LoginPanel extends Page{
-
     private JButton loginButton;
     private JTextField inputExamId;
     private JTextField inputUserId;
     private JLabel examIdLabel;
     private JLabel userIdLabel;
     private JLabel logoImageLabel;
+    private JButton exitButton;
 
     public LoginPanel(EventList list){
         super(list);
@@ -89,6 +89,19 @@ public class LoginPanel extends Page{
         logoImageLabel.setBounds(location.x, location.y, size.width, size.height);
         logoImageLabel.setVisible(true);
         panel.add(logoImageLabel);
+
+        exitButton = new JButton("X");
+        location = ViewDisposer.getLocation(1460, 0);
+        size = ViewDisposer.getSize(40, 40);
+        exitButton.setLocation(location);
+        exitButton.setSize(size);
+        exitButton.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(30)));
+        exitButton.setBackground(Color.ORANGE);
+        exitButton.addActionListener(e -> {
+            onExitButtonClicked();
+        });
+        exitButton.setVisible(true);
+        panel.add(exitButton);
     }
 
     @Override
@@ -116,5 +129,12 @@ public class LoginPanel extends Page{
     private void onLoginButtonClicked(){
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
         list.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, loginData));
+    }
+
+    private void onExitButtonClicked(){
+        int result = JOptionPane.showConfirmDialog(panel, "종료하시겠습니까?", "종료", JOptionPane.YES_NO_OPTION);
+        if(result == JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
     }
 }
