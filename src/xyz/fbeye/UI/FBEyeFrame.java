@@ -83,7 +83,6 @@ public class FBEyeFrame {
         pageMap.put(Destination.ENV_TEST_1, new EnvTestPanel_1(list));
         pageMap.put(Destination.ENV_TEST_2, new EnvTestPanel_2(list));
         pageMap.put(Destination.ENV_TEST_3, new EnvTestPanel_3(list));
-        pageMap.put(Destination.ENV_TEST_4, new EnvTestPanel_4(list));
         pageMap.put(Destination.EXAM_PAGE, new ExamPanel(list));
     }
 

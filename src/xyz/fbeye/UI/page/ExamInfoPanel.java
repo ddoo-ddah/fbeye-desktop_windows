@@ -160,7 +160,7 @@ public class ExamInfoPanel extends Page{
             item.setVisible(true);
             examInfoListView.addItem(item);
         }
-        list.add(new Event(Destination.ENV_TEST_4, EventDataType.EXAM_INFO, examInfo));
+        list.add(new Event(Destination.ENV_TEST_3, EventDataType.EXAM_INFO, examInfo));
         panel.revalidate();
     }
 

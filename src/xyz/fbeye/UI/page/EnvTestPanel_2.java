@@ -1,38 +1,30 @@
 /*
- * EnvTestPageStep1.java
+ * EnvTestPanel_3.java
  * Author : susemeeee
- * Created Date : 2020-08-10
+ * Created Date : 2020-08-11
  */
 package xyz.fbeye.UI.page;
 
-import xyz.fbeye.datatype.FBEyeNotice;
+import xyz.fbeye.UI.page.element.SetupCanvas;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
 import xyz.fbeye.util.SignalDataMaker;
 import xyz.fbeye.util.ViewDisposer;
-import com.mommoo.flat.button.FlatButton;
-import com.mommoo.flat.text.label.FlatLabel;
-import com.mommoo.util.FontManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class EnvTestPanel_2 extends Page {
-    private List<String> infoTexts;
-    private int currentStep;
-
-    private FlatLabel infoTextLabel;
-    private FlatButton startButton;
+public class EnvTestPanel_2 extends Page{
+    private SetupCanvas canvas;
+    private JLabel infoTextLabel;
+    private JButton startButton;
 
     public EnvTestPanel_2(EventList list){
         super(list);
-        infoTexts = new FBEyeNotice().envTestInfoTexts_1;
-        currentStep = 0;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -41,6 +33,7 @@ public class EnvTestPanel_2 extends Page {
                 restore();
             }
         };
+
     }
 
     @Override
@@ -62,17 +55,17 @@ public class EnvTestPanel_2 extends Page {
 
     @Override
     protected void setView(){
-        infoTextLabel = new FlatLabel();
-        infoTextLabel.setBackground(new Color(255, 255, 222));
-        infoTextLabel.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
-        infoTextLabel.setText(infoTexts.get(currentStep));
+        infoTextLabel = new JLabel("asfd");
+        Point location = ViewDisposer.getLocation(365, 440);
+        Dimension size = ViewDisposer.getSize(760, 200);
+        infoTextLabel.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(36)));
         infoTextLabel.setVisible(true);
         addComponent(infoTextLabel, 1, 1, 3, 1, GridBagConstraints.BOTH);
 
-        startButton = new FlatButton("테스트 시작");
-        startButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
-        startButton.setForeground(Color.BLACK);
-        startButton.setBackground(new Color(255, 109, 112));
+        startButton = new JButton("테스트 시작");
+        location = ViewDisposer.getLocation(1200, 500);
+        size = ViewDisposer.getSize(150, 100);
+        startButton.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(30)));
         startButton.addActionListener(e -> {
             onStartButtonClicked();
         });
@@ -86,23 +79,28 @@ public class EnvTestPanel_2 extends Page {
             if(list.get(i) == null){
                 break;
             }
-            if(list.get(i).destination == Destination.ENV_TEST_2 && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(list.get(i).data.equals("ok")){
-                    currentStep++;
+            Event e = list.get(i);
+            if(e.destination == Destination.ENV_TEST_2 && e.eventDataType == EventDataType.SIGNAL){
+                if(e.data.equals("ok")){
+                    startTest();
                 }
                 list.remove(i);
             }
         }
 
-        if(currentStep == infoTexts.size()){
+        if(canvas != null && canvas.getIsEnd()){
             list.add(new Event(Destination.ENV_TEST_3, EventDataType.NAVIGATE, null));
-            timer.cancel();
         }
-        else if(currentStep >= 1){
-            startButton.setVisible(false);
-            infoTextLabel.setText(infoTexts.get(currentStep));
-            panel.revalidate();
-        }
+    }
+
+    private void startTest(){
+        panel.removeAll();
+        canvas = new SetupCanvas();
+        canvas.getCanvas().setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        canvas.getCanvas().setVisible(true);
+        addComponent(canvas.getCanvas(), 0, 0, 5, 5, GridBagConstraints.BOTH);
+        panel.revalidate();
+        canvas.postVisible();
     }
 
     private void onStartButtonClicked(){
