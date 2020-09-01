@@ -27,7 +27,7 @@ public class ChatPanel {
     private Vector<String> chatLog;
     private boolean sendChat;
 
-    private FlatListView<FlatLabel> chatList2;
+    private FlatListView<FlatLabel> chatList;
     private FlatTextField chatText;
     private FlatButton sendButton;
 
@@ -68,12 +68,12 @@ public class ChatPanel {
         chatListPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         chatListPanel.setLayout(new GridLayout());
 
-        chatList2 = new FlatListView<>();
-        chatList2.setBackground(new Color(255, 255, 222));
-        chatList2.setMultiSelectionMode(false);
-        chatList2.setSingleSelectionMode(false);
-        chatList2.setSelectionColor(new Color(255, 255, 222));
-        FlatScrollPane scrollPane = new FlatScrollPane(chatList2.getComponent());
+        chatList = new FlatListView<>();
+        chatList.setBackground(new Color(255, 255, 222));
+        chatList.setMultiSelectionMode(false);
+        chatList.setSingleSelectionMode(false);
+        chatList.setSelectionColor(new Color(255, 255, 222));
+        FlatScrollPane scrollPane = new FlatScrollPane(chatList.getComponent());
         scrollPane.setBackground(new Color(255, 255, 222));
         scrollPane.setVerticalScrollTrackColor(new Color(255, 222, 222));
         scrollPane.setAutoscrolls(true);
@@ -126,7 +126,7 @@ public class ChatPanel {
             FlatLabel item = new FlatLabel(chatText.getText());
             item.setBackground(new Color(255, 255, 222));
             item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(22)));
-            chatList2.addItem(item);
+            chatList.addItem(item);
             chatText.setText(null);
             chatText.setHint("채팅 입력");//test
             sendChat = true;
@@ -146,7 +146,7 @@ public class ChatPanel {
         FlatLabel item = new FlatLabel(chat);
         item.setBackground(new Color(255, 255, 222));
         item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(18)));
-        chatList2.addItem(item);
+        chatList.addItem(item);
     }
 
     public JPanel getPanel(){

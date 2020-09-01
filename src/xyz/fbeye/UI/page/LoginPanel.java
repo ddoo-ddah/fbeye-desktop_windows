@@ -138,6 +138,10 @@ public class LoginPanel extends Page{
                 }
                 list.remove(i);
             }
+            else if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.QR_CODE_DATA){
+                list.add(new Event(Destination.ENV_TEST_1, EventDataType.QR_CODE_DATA, list.get(i).data));
+                list.remove(i);
+            }
         }
     }
 

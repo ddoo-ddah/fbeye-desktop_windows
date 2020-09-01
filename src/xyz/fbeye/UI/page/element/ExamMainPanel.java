@@ -88,21 +88,26 @@ public class ExamMainPanel {
         questionText.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
         questionText.setSize(size);
         questionText.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
+        questionText.setMargin(new Insets(ViewDisposer.getFontSize(2), ViewDisposer.getFontSize(2),
+                ViewDisposer.getFontSize(2), ViewDisposer.getFontSize(2)));
         questionText.setEditable(false);
         questionText.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         questionText.setVisible(true);
         panel.add(questionText);
 
-        answerArea = new JTextArea();
+        JPanel answerPanel = new JPanel();
         location = ViewDisposer.getLocation(390, 505);
         size = ViewDisposer.getSize(720, 345);
-        answerArea.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
-        answerArea.setSize(size);
+        answerPanel.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
+        answerPanel.setSize(size);
+        answerPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
+        answerPanel.setLayout(new GridLayout());
+        answerArea = new JTextArea();
         answerArea.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
-        answerArea.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
-        answerArea.setEditable(true);
         answerArea.setVisible(true);
-        panel.add(answerArea);
+        answerPanel.add(answerArea);
+        answerPanel.setVisible(true);
+        panel.add(answerPanel);
 
         optionList = new JList<>();
         optionList.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
@@ -111,7 +116,10 @@ public class ExamMainPanel {
         optionList.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         optionList.setSelectionModel(new MultipleItemSelectionModel());
         optionList.setVisible(false);
-        panel.add(optionList);//나중에
+        optionList.setBackground(Color.WHITE);
+        optionList.setSelectionBackground(new Color(255, 109, 112));
+        optionList.setSelectionForeground(Color.BLACK);
+        panel.add(optionList);
 
         prevButton = new FlatButton("이전");
         location = ViewDisposer.getLocation(655, 860);

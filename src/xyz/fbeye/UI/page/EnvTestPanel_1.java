@@ -23,15 +23,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class EnvTestPanel_1 extends Page {
-    private boolean isTestStarted;
-
     private JLabel topQRCode;
     private JLabel bottomQRCode;
-    private FlatButton startButton;
 
     public EnvTestPanel_1(EventList list){
         super(list);
-        isTestStarted = false;
         initPanel();
         timer = new Timer();
         task = new TimerTask() {
@@ -66,20 +62,6 @@ public class EnvTestPanel_1 extends Page {
         infoText.setVisible(true);
         panel.add(infoText);
 
-        startButton = new FlatButton("테스트 시작");
-        startButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
-        startButton.setForeground(Color.BLACK);
-        location = ViewDisposer.getLocation(800, 630);
-        size = ViewDisposer.getSize(150, 70);
-        startButton.setLocation(location);
-        startButton.setSize(size);
-        startButton.setBackground(new Color(255, 109, 112));
-        startButton.addActionListener(e -> {
-            onStartButtonClicked();
-        });
-        startButton.setVisible(true);
-        panel.add(startButton);
-
         topQRCode = new JLabel();
         location = ViewDisposer.getLocation(715, 0);
         size = ViewDisposer.getSize(70, 70);
@@ -103,22 +85,17 @@ public class EnvTestPanel_1 extends Page {
                 break;
             }
             Event e = list.get(i);
-            if(e.destination == Destination.ENV_TEST_1 && e.eventDataType == EventDataType.SIGNAL){
-                if(e.data.equals("ok") && !isTestStarted){
-                    startButton.setVisible(false);
-                    panel.repaint();
-                    isTestStarted = true;
-                    list.remove(i);
-                }
-                else if(e.data.equals("ok")){
+            if(e.destination == Destination.ENV_TEST_1){
+                if(e.eventDataType == EventDataType.SIGNAL && e.data.equals("authOk")){
                     list.remove(i);
                     list.add(new Event(Destination.ENV_TEST_2, EventDataType.NAVIGATE, null));
                 }
+                else if(e.eventDataType == EventDataType.QR_CODE_DATA){
+                    QRDataReceived((String)e.data);
+                    list.remove(i);
+                }
             }
-            else if(e.destination == Destination.ENV_TEST_1 && e.eventDataType == EventDataType.QR_CODE_DATA){
-                QRDataReceived((String)e.data);
-                list.remove(i);
-            }
+
         }
     }
 
@@ -128,9 +105,7 @@ public class EnvTestPanel_1 extends Page {
         ImageIcon img = QRGenerator.generateQR(data, squaredQRSize, squaredQRSize);
         topQRCode.setIcon(img);
         bottomQRCode.setIcon(img);
-    }
-
-    private void onStartButtonClicked(){
-        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("startTest")));
+        panel.revalidate();
+        panel.repaint();
     }
 }

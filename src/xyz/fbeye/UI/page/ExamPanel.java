@@ -87,18 +87,23 @@ public class ExamPanel extends Page{
         chatPanel = new ChatPanel(70, 475);
         panel.add(chatPanel.getPanel());
 
+        JPanel submissionPanel = new JPanel();
+        submissionPanel.setLocation(ViewDisposer.getLocation(1130, 840));
+        submissionPanel.setSize(ViewDisposer.getSize(300, 80));
+        submissionPanel.setLayout(new GridLayout());
+        submissionPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+
         submissionButton = new FlatButton("제출");
-        submissionButton.setLocation(ViewDisposer.getLocation(1130, 840));
-        submissionButton.setSize(ViewDisposer.getSize(300, 80));
         submissionButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(36)));
         submissionButton.setBackground(new Color(255, 109, 112));
         submissionButton.setForeground(Color.BLACK);
-        submissionButton.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
         submissionButton.addActionListener(e -> {
             onSubmissionButtonClicked();
         });
         submissionButton.setVisible(true);
-        panel.add(submissionButton);
+        submissionPanel.add(submissionButton);
+        submissionPanel.setVisible(true);
+        panel.add(submissionPanel);
     }
 
     private void setQuestionNumberBackground(){
@@ -169,7 +174,9 @@ public class ExamPanel extends Page{
             timer.cancel();
             endTest();
         }
-        timePanel.setTime(duration.toHours() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart());
+        timePanel.setTime(String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(),
+                duration.toSecondsPart()));
+        //timePanel.setTime(duration.toHours() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart());
     }
 
     private void chatReceived(String chat){

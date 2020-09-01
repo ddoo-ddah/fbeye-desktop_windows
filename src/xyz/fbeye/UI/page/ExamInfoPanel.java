@@ -137,6 +137,9 @@ public class ExamInfoPanel extends Page{
                 else if(e.eventDataType == EventDataType.USER_INFO){
                     userInfoReceived((UserInfo) e.data);
                 }
+                else if(e.eventDataType == EventDataType.QR_CODE_DATA){
+                    list.add(new Event(Destination.ENV_TEST_1, EventDataType.QR_CODE_DATA, e.data));
+                }
                 list.remove(i);
             }
         }
