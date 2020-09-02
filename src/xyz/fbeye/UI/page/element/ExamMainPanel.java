@@ -5,6 +5,7 @@
  */
 package xyz.fbeye.UI.page.element;
 
+import com.mommoo.flat.component.FlatScrollPane;
 import xyz.fbeye.datatype.examdata.*;
 import xyz.fbeye.util.MultipleItemSelectionModel;
 import xyz.fbeye.util.ViewDisposer;
@@ -32,6 +33,7 @@ public class ExamMainPanel {
     private JTextArea questionText;
     private JPanel answerPanel;
     private JTextArea answerArea;
+    private JPanel optionPanel;
     private JList<String> optionList;
     private FlatButton prevButton;
     private FlatButton nextButton;
@@ -110,17 +112,27 @@ public class ExamMainPanel {
         answerPanel.add(answerArea);
         panel.add(answerPanel);
 
+        optionPanel = new JPanel();
+        optionPanel.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
+        optionPanel.setSize(size);
+        optionPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
+        optionPanel.setBackground(Color.WHITE);
+        optionPanel.setLayout(new GridLayout());
+        optionPanel.setVisible(false);
+
         optionList = new JList<>();
-        optionList.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
-        optionList.setSize(size);
         optionList.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
-        optionList.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         optionList.setSelectionModel(new MultipleItemSelectionModel());
         optionList.setBackground(Color.WHITE);
         optionList.setSelectionBackground(new Color(255, 109, 112));
         optionList.setSelectionForeground(Color.BLACK);
-        panel.add(optionList);
-        optionList.setVisible(false);
+        optionList.setVisible(true);
+        FlatScrollPane scrollPane = new FlatScrollPane(optionList);
+        scrollPane.setVerticalScrollTrackColor(new Color(255, 222, 222));
+        scrollPane.setVisible(true);
+        optionPanel.add(scrollPane);
+        panel.add(optionPanel);
+
 
         prevButton = new FlatButton("이전");
         location = ViewDisposer.getLocation(655, 860);
@@ -182,7 +194,7 @@ public class ExamMainPanel {
         numberLabel.setText(currentQuestion.questionNumber + "번 문제");
 
         if(currentQuestion.type == QuestionType.DESCRIPTIVE){
-            optionList.setVisible(false);
+            optionPanel.setVisible(false);
             answerPanel.setVisible(true);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
@@ -198,7 +210,7 @@ public class ExamMainPanel {
             answerPanel.setVisible(false);
             optionList.setListData(new Vector<>(currentQuestion.options));
             optionList.setSelectionModel(new DefaultListSelectionModel());
-            optionList.setFixedCellHeight(optionList.getHeight() / currentQuestion.options.size());
+            optionList.setFixedCellHeight(optionList.getHeight() / 5);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
                 optionList.setSelectedIndex(Integer.parseInt(answer) - 1);
@@ -206,7 +218,9 @@ public class ExamMainPanel {
             else{
                 optionList.setSelectedIndex(-1);
             }
-            optionList.setVisible(true);
+            optionPanel.setVisible(true);
+            optionPanel.revalidate();
+            optionPanel.repaint();
             panel.revalidate();
             panel.repaint();
         }
@@ -214,7 +228,7 @@ public class ExamMainPanel {
             answerPanel.setVisible(false);
             optionList.setListData(new Vector<>(currentQuestion.options));
             optionList.setSelectionModel(new MultipleItemSelectionModel());
-            optionList.setFixedCellHeight(optionList.getHeight() / currentQuestion.options.size());
+            optionList.setFixedCellHeight(optionList.getHeight() / 5);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
                 String[] str = answer.split(",");
@@ -227,7 +241,9 @@ public class ExamMainPanel {
             else{
                 optionList.setSelectedIndex(-1);
             }
-            optionList.setVisible(true);
+            optionPanel.setVisible(true);
+            optionPanel.revalidate();
+            optionPanel.repaint();
             panel.revalidate();
             panel.repaint();
         }
