@@ -16,10 +16,10 @@ public class SetupCanvas {
     BufferStrategy bufferStrategy;
     private Toolkit toolkit;
 
-    private final int XSplitFactor = 7;
-    private final int YSplitFactor = 5;
-    //private final int XSplitFactor = 2;//test
-    //private final int YSplitFactor = 2;//test
+    //private final int XSplitFactor = 7;
+    //private final int YSplitFactor = 5;
+    private final int XSplitFactor = 2;//test
+    private final int YSplitFactor = 2;//test
     private final int VALIDATION_SIZE = 5;
 
     private int next = 0;

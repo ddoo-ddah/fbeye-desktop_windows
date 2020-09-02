@@ -14,6 +14,5 @@ public enum Destination {
     ENV_TEST_1,
     ENV_TEST_2,
     ENV_TEST_3,
-    ENV_TEST_4,
     EXAM_PAGE
 }

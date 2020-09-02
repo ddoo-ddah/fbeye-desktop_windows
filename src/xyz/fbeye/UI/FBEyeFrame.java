@@ -5,6 +5,7 @@
  */
 package xyz.fbeye.UI;
 
+import org.json.JSONException;
 import xyz.fbeye.UI.page.*;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
@@ -51,8 +52,8 @@ public class FBEyeFrame {
         layout.rowHeights = new int[]{0};
         layout.rowWeights = new double[]{1};
         init();
-        //connection.Connect("localhost", 9000);//test
-        connection.Connect("fbeye.xyz", 10100);
+        connection.connect("localhost", 9000);//test
+        //connection.connect("fbeye.xyz", 10100);
         timer.schedule(task, 100, 100);
         addComponent(pageMap.get(currentPage).getPanel());
         pageMap.get(currentPage).startTimer();
@@ -136,7 +137,10 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.SERVER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    if(e.eventDataType == EventDataType.CHAT){
+                    if(e.eventDataType == EventDataType.DISCONNECT){
+                        connection.disconnect();
+                    }
+                    else if(e.eventDataType == EventDataType.CHAT){
                         chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
                     }
                     else{
@@ -148,24 +152,28 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.MANAGER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    List<Object> receivedData = jsonParser.parse(new JSONObject((String)e.data));
-                    if(receivedData.get(0) == EventDataType.SIGNAL){
-                        list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
-                    }
-                    else if(receivedData.get(0) == EventDataType.EXAM_INFO){
-                        list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.EXAM_INFO, receivedData.get(1)));
-                    }
-                    else if(receivedData.get(0) == EventDataType.USER_INFO){
-                        list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.USER_INFO, receivedData.get(1)));
-                    }
-                    else if(receivedData.get(0) == EventDataType.QR_CODE_DATA){
-                        list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
-                    }
-                    else if(receivedData.get(0) == EventDataType.ENCRYPTED_QUESTION){
-                        list.add(new Event(currentPage, EventDataType.ENCRYPTED_QUESTION, receivedData.get(1)));
-                    }
-                    else if(receivedData.get(0) == EventDataType.QUESTION_KEY){
-                        list.add(new Event(currentPage, EventDataType.QUESTION_KEY, receivedData.get(1)));
+                    try {
+                        List<Object> receivedData = jsonParser.parse(new JSONObject((String)e.data));
+                        if(receivedData.get(0) == EventDataType.SIGNAL){
+                            list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
+                        }
+                        else if(receivedData.get(0) == EventDataType.EXAM_INFO){
+                            list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.EXAM_INFO, receivedData.get(1)));
+                        }
+                        else if(receivedData.get(0) == EventDataType.USER_INFO){
+                            list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.USER_INFO, receivedData.get(1)));
+                        }
+                        else if(receivedData.get(0) == EventDataType.QR_CODE_DATA){
+                            list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
+                        }
+                        else if(receivedData.get(0) == EventDataType.ENCRYPTED_QUESTION){
+                            list.add(new Event(currentPage, EventDataType.ENCRYPTED_QUESTION, receivedData.get(1)));
+                        }
+                        else if(receivedData.get(0) == EventDataType.QUESTION_KEY){
+                            list.add(new Event(currentPage, EventDataType.QUESTION_KEY, receivedData.get(1)));
+                        }
+                    }catch (JSONException exception){
+                        exception.printStackTrace();
                     }
                 }
                 list.remove(i);
@@ -190,7 +198,7 @@ public class FBEyeFrame {
             else if(chatEventList.get(i).destination == Destination.MANAGER){
                 Event e = chatEventList.get(i);
                 if(e.data != null &&
-                        (currentPage == Destination.ENV_TEST_4 || currentPage == Destination.EXAM_PAGE)){
+                        (currentPage == Destination.ENV_TEST_3 || currentPage == Destination.EXAM_PAGE)){
                     list.add(new Event(currentPage, EventDataType.CHAT, e.data));
                 }
                 chatEventList.remove(i);

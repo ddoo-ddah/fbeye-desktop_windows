@@ -176,7 +176,6 @@ public class ExamPanel extends Page{
         }
         timePanel.setTime(String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(),
                 duration.toSecondsPart()));
-        //timePanel.setTime(duration.toHours() + ":" + duration.toMinutesPart() + ":" + duration.toSecondsPart());
     }
 
     private void chatReceived(String chat){
@@ -197,9 +196,10 @@ public class ExamPanel extends Page{
 
     private void endTest(){
         examMainPanel.saveAnswer(AnswerState.SOLVED);
-        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("endTest")));
+        list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("endExam")));
         list.add(new Event(Destination.SERVER, EventDataType.ANSWER, AnswerTypeConverter.convert(examMainPanel.getAnswer())));
         JOptionPane.showMessageDialog(panel, "수고하셨습니다.", "제출", JOptionPane.INFORMATION_MESSAGE);
+        list.add(new Event(Destination.SERVER, EventDataType.DISCONNECT, null));
         System.exit(0);
     }
 

@@ -43,4 +43,8 @@ public class ChatConnection {
     public void send(String msg){
         socket.emit("chat", new JSONObject("{\"message\":\"" + msg + "\"}"));
     }
+
+    public void disconnect(){
+        socket.disconnect();
+    }
 }

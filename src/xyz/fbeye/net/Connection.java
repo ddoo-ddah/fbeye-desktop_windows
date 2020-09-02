@@ -26,7 +26,7 @@ public class Connection {
         this.list = list;
     }
 
-    public void Connect(String host, int port) {
+    public void connect(String host, int port) {
         try {
             SSLContext context = SSLContext.getInstance("TLSv1.2");
             TrustManager[] trustManagers = new TrustManager[]{
@@ -90,6 +90,14 @@ public class Connection {
                 bufferedwriter.flush();
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void disconnect(){
+        try{
+            sslSocket.close();
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

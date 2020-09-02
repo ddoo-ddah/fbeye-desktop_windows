@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FBEyeNotice {
     public final List<String> notices;
-    public final List<String> envTestInfoTexts_1;
+    public final String envTestInfoText_1;
     public final String envTestInfoText_2;
 
     public FBEyeNotice(){
@@ -24,12 +24,8 @@ public class FBEyeNotice {
 
         this.notices = notices;
 
-        envTestInfoTexts_1 = new ArrayList<>();
-        envTestInfoTexts_1.add("얼굴인식 테스트\n\n\t시작 버튼을 누르세요");
-        for(int i = 0; i < 3; i++){ //테스트 데이터
-            envTestInfoTexts_1.add("얼굴인식 테스트\n\n\t테스트 " + (i + 1) + "단계");
-        }
+        envTestInfoText_1 = "QR코드 인식 테스트\n\n\tQR코드가 나타나면\n\t휴대폰으로 인식하세요.";
 
-        envTestInfoText_2 = "QR코드 인식 테스트\n\n\t시작 버튼을 누르고 QR코드가 나타나면\n\t휴대폰으로 인식하세요.";
+        envTestInfoText_2 = "눈 인식 테스트\n\n\t분홍색 원을 바라보면서\n\tspace키를 누르세요.";
     }
 }

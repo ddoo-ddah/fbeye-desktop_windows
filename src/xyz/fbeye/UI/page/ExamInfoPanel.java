@@ -20,6 +20,7 @@ import com.mommoo.flat.text.label.FlatLabel;
 import com.mommoo.util.FontManager;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.Timer;
@@ -30,7 +31,8 @@ public class ExamInfoPanel extends Page{
 
     private FlatListView<FlatLabel> userInfoListView;
     private FlatListView<FlatLabel> examInfoListView;
-    private FlatCheckBox readNoticeCheck;
+    //private FlatCheckBox readNoticeCheck;
+    private JCheckBox readNoticeCheck;
     private FlatButton takeExamButton;
 
     public ExamInfoPanel(EventList list){
@@ -66,20 +68,37 @@ public class ExamInfoPanel extends Page{
 
     @Override
     protected void setView(){
+        JPanel userInfoPanel = new JPanel();
+        userInfoPanel.setBackground(new Color(255, 255, 222));
+        userInfoPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+        userInfoPanel.setLayout(new GridLayout());
+        userInfoPanel.setVisible(true);
         userInfoListView = new FlatListView<>();
         userInfoListView.setMultiSelectionMode(false);
         userInfoListView.setSingleSelectionMode(false);
         userInfoListView.setBackground(new Color(0, 0, 0, 0));
         userInfoListView.setSelectionColor(new Color(255, 255, 222));
-        addComponent(userInfoListView.getComponent(), 1, 1, 1, 1, GridBagConstraints.BOTH);
+        userInfoPanel.add(userInfoListView.getComponent());
+        addComponent(userInfoPanel, 1, 1, 1, 1, GridBagConstraints.BOTH);
 
+        JPanel examInfoPanel = new JPanel();
+        examInfoPanel.setBackground(new Color(255, 255, 222));
+        examInfoPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+        examInfoPanel.setLayout(new GridLayout());
+        examInfoPanel.setVisible(true);
         examInfoListView = new FlatListView<>();
         examInfoListView.setMultiSelectionMode(false);
         examInfoListView.setSingleSelectionMode(false);
         examInfoListView.setSelectionColor(new Color(255, 255, 222));
         examInfoListView.setBackground(new Color(255, 255, 222));
-        addComponent(examInfoListView.getComponent(), 1, 3, 1, 3, GridBagConstraints.BOTH);
+        examInfoPanel.add(examInfoListView.getComponent());
+        addComponent(examInfoPanel, 1, 3, 1, 3, GridBagConstraints.BOTH);
 
+        JPanel noticePanel = new JPanel();
+        noticePanel.setBackground(new Color(255, 255, 222));
+        noticePanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+        noticePanel.setLayout(new GridLayout());
+        noticePanel.setVisible(true);
         FlatListView<FlatLabel> noticeListView = new FlatListView<>();
         noticeListView.setBackground(new Color(255, 255, 222));
         noticeListView.setMultiSelectionMode(false);
@@ -89,28 +108,40 @@ public class ExamInfoPanel extends Page{
         for(int i = 0; i < notice.size(); i++){
             FlatLabel item = new FlatLabel(notice.get(i));
             if(i == 0){
-                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
+                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(36)));
             }
             else{
-                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
+                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
             }
             item.setBackground(new Color(255, 255, 222));
             item.setVisible(true);
             noticeListView.addItem(item);
         }
-        addComponent(noticeListView.getComponent(), 3, 1, 3, 3, GridBagConstraints.BOTH);
+        noticePanel.add(noticeListView.getComponent());
+        addComponent(noticePanel, 3, 1, 3, 3, GridBagConstraints.BOTH);
 
-        readNoticeCheck = new FlatCheckBox("위 사항들을 읽었으며 동의합니다.");
-        readNoticeCheck.setCheckBoxLineColor(new Color(255, 109, 112));
-        readNoticeCheck.setCheckColor(new Color(150, 255, 150));
-        readNoticeCheck.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
+        JPanel checkPanel = new JPanel();
+        checkPanel.setBackground(new Color(255, 255, 222));
+        checkPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+        checkPanel.setLayout(new GridLayout());
+        checkPanel.setVisible(true);
+        readNoticeCheck = new JCheckBox("위 사항들을 읽었으며 동의합니다.");
         readNoticeCheck.setBackground(new Color(255, 255, 222));
+        readNoticeCheck.setIcon(new ImageIcon("files/icons8-unchecked-checkbox-96.png"));
+        readNoticeCheck.setSelectedIcon(new ImageIcon("files/icons8-checked-checkbox-96.png"));
+        readNoticeCheck.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
         readNoticeCheck.setOpaque(true);
-        readNoticeCheck.setTextColor(Color.BLACK);
-        readNoticeCheck.setOnClickListener(component -> onChecked());
+        readNoticeCheck.addActionListener(e -> {
+            onChecked();
+        });
         readNoticeCheck.setVisible(true);
-        addComponent(readNoticeCheck, 3, 5, 1, 1, GridBagConstraints.BOTH);
+        checkPanel.add(readNoticeCheck);
+        addComponent(checkPanel, 3, 5, 1, 1, GridBagConstraints.BOTH);
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+        buttonPanel.setLayout(new GridLayout());
+        buttonPanel.setVisible(true);
         takeExamButton = new FlatButton("응시");
         takeExamButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
         takeExamButton.setEnabled(false);
@@ -120,7 +151,8 @@ public class ExamInfoPanel extends Page{
         takeExamButton.addActionListener(e -> {
             onButtonPressed();
         });
-        addComponent(takeExamButton, 5, 5, 1, 1, GridBagConstraints.BOTH);
+        buttonPanel.add(takeExamButton);
+        addComponent(buttonPanel, 5, 5, 1, 1, GridBagConstraints.BOTH);
     }
 
     @Override
@@ -151,10 +183,10 @@ public class ExamInfoPanel extends Page{
         for(int i = 0; i < result.size(); i++){
             FlatLabel item = new FlatLabel(result.get(i));
             if(i == 0){
-                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
+                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(36)));
             }
             else{
-                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
+                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
             }
             item.setBackground(new Color(255, 255, 222));
             item.setVisible(true);
@@ -170,10 +202,10 @@ public class ExamInfoPanel extends Page{
         for(int i = 0; i < result.size(); i++){
             FlatLabel item = new FlatLabel(result.get(i));
             if(i == 0){
-                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
+                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(36)));
             }
             else{
-                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
+                item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
             }
             item.setBackground(new Color(255, 255, 222));
             item.setVisible(true);
@@ -183,13 +215,7 @@ public class ExamInfoPanel extends Page{
     }
 
     private void onChecked(){
-        if(readNoticeCheck.isChecked()){
-            readNoticeCheck.setCheckBoxLineColor(new Color(150, 255, 150));
-        }
-        else{
-            readNoticeCheck.setCheckBoxLineColor(new Color(255, 109, 112));
-        }
-        takeExamButton.setEnabled(readNoticeCheck.isChecked());
+        takeExamButton.setEnabled(readNoticeCheck.isSelected());
         panel.revalidate();
     }
 

@@ -25,15 +25,7 @@ public abstract class Page {
         this.list = list;
     }
 
-    protected void initPanel(){
-        panel = new JPanel();
-        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        panel.setLocation(new Point(0,0));
-        panel.setLayout(layout);
-        panel.setBackground(Color.WHITE);
-        setView();
-        panel.setVisible(true);
-    }
+    protected abstract void initPanel();
 
     protected abstract void setView();
     protected abstract void restore();

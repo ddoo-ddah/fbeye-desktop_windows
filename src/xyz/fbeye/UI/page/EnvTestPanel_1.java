@@ -11,9 +11,7 @@ import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
 import xyz.fbeye.util.QRGenerator;
-import xyz.fbeye.util.SignalDataMaker;
 import xyz.fbeye.util.ViewDisposer;
-import com.mommoo.flat.button.FlatButton;
 import com.mommoo.flat.text.label.FlatLabel;
 import com.mommoo.util.FontManager;
 
@@ -51,7 +49,7 @@ public class EnvTestPanel_1 extends Page {
 
     @Override
     protected void setView(){
-        FlatLabel infoText = new FlatLabel(new FBEyeNotice().envTestInfoText_2);
+        FlatLabel infoText = new FlatLabel(new FBEyeNotice().envTestInfoText_1);
         infoText.setBackground(new Color(255, 255, 222));
         infoText.setForeground(Color.BLACK);
         Point location = ViewDisposer.getLocation(550, 300);

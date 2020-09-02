@@ -5,6 +5,8 @@
  */
 package xyz.fbeye.UI.page;
 
+import com.mommoo.flat.button.FlatButton;
+import com.mommoo.util.FontManager;
 import xyz.fbeye.UI.page.element.*;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
@@ -18,6 +20,7 @@ import xyz.fbeye.datatype.examdata.QuestionType;
 import xyz.fbeye.util.*;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.time.Duration;
 import java.time.ZoneId;
@@ -41,7 +44,7 @@ public class EnvTestPanel_3 extends Page{
     private ExamMainPanel examMainPanel;
     private QuestionNumberPanel questionNumberPanel;
     private ChatPanel chatPanel;
-    private JButton startTestButton;
+    private FlatButton startTestButton;
 
     public EnvTestPanel_3(EventList list){
         super(list);
@@ -54,7 +57,17 @@ public class EnvTestPanel_3 extends Page{
                 restore();
             }
         };
+    }
 
+    @Override
+    protected void initPanel() {
+        panel = new JPanel();
+        panel.setBackground(new Color(222, 239, 255));
+        panel.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        panel.setLocation(new Point(0,0));
+        panel.setLayout(null);
+        setView();
+        panel.setVisible(true);
     }
 
     @Override
@@ -68,7 +81,7 @@ public class EnvTestPanel_3 extends Page{
         panel.add(topQRCode);
 
         bottomQRCode = new JLabel();
-        bottomQRCode.setLocation(ViewDisposer.getLocation(715, 928));
+        bottomQRCode.setLocation(ViewDisposer.getLocation(715, 920));
         bottomQRCode.setSize(QRSize);
         bottomQRCode.setVisible(true);
         panel.add(bottomQRCode);
@@ -86,17 +99,23 @@ public class EnvTestPanel_3 extends Page{
         chatPanel = new ChatPanel(70, 475);
         panel.add(chatPanel.getPanel());
 
-        startTestButton = new JButton("시험 시작");
-        startTestButton.setLocation(ViewDisposer.getLocation(1130, 850));
-        startTestButton.setSize(ViewDisposer.getSize(300, 80));
-        startTestButton.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(36)));
-        startTestButton.setBackground(Color.ORANGE);
+        JPanel startPanel = new JPanel();
+        startPanel.setLocation(ViewDisposer.getLocation(1130, 840));
+        startPanel.setSize(ViewDisposer.getSize(300, 80));
+        startPanel.setLayout(new GridLayout());
+        startPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
+        startPanel.setVisible(true);
+        startTestButton = new FlatButton("시험 시작");
+        startTestButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(36)));
+        startTestButton.setBackground(new Color(255, 109, 112));
+        startTestButton.setForeground(Color.BLACK);
         startTestButton.addActionListener(e -> {
             onStartTestButtonClicked();
         });
         startTestButton.setEnabled(false);
         startTestButton.setVisible(true);
-        panel.add(startTestButton);
+        startPanel.add(startTestButton);
+        panel.add(startPanel);
     }
 
     private void setQRCode(String data){
@@ -124,27 +143,13 @@ public class EnvTestPanel_3 extends Page{
 
     @Override
     protected void restore(){
-        if(examMainPanel.getIsChanged()) {
-            setQuestionNumberBackground();
-        }
-        if(questionNumberPanel.getIsChanged()){
-            moveQuestion();
-        }
-        if(chatPanel.getSendChat()){
-            String chat = chatPanel.getChatContent();
-            list.add(new Event(Destination.SERVER, EventDataType.CHAT, chat));
-            chatPanel.setSendChat(false);
-            chatPanel.resetChatContent();
-            chatPanel.getPanel().repaint();
-        }
-
         for(int i = 0; i < list.size(); i++){
             if(list.get(i) == null){
                 list.remove(i);
                 break;
             }
             Event e = list.get(i);
-            if(e.destination == Destination.ENV_TEST_4){
+            if(e.destination == Destination.ENV_TEST_3){
                 if(e.eventDataType == EventDataType.CHAT){
                     chatReceived((String)e.data);
                 }
@@ -176,6 +181,20 @@ public class EnvTestPanel_3 extends Page{
             }
         }
 
+        if(examMainPanel.getIsChanged()) {
+            setQuestionNumberBackground();
+        }
+        if(questionNumberPanel.getIsChanged()){
+            moveQuestion();
+        }
+        if(chatPanel.getSendChat()){
+            String chat = chatPanel.getChatContent();
+            list.add(new Event(Destination.SERVER, EventDataType.CHAT, chat));
+            chatPanel.setSendChat(false);
+            chatPanel.resetChatContent();
+            chatPanel.getPanel().repaint();
+        }
+
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         Duration startDuration = Duration.between(now.toLocalDateTime(), examInfo.startTime);
         Duration endDuration = Duration.between(now.toLocalDateTime(), examInfo.endTime);
@@ -185,12 +204,13 @@ public class EnvTestPanel_3 extends Page{
             endTest();
         }
         if(startDuration.toSeconds() <= 0){
-            timePanel.setTime("0:0:0");
+            timePanel.setTime("00:00:00");
             startTestButton.setEnabled(true);
             panel.repaint();
         }
         else{
-            timePanel.setTime(startDuration.toHours() + ":" + startDuration.toMinutesPart() + ":" + startDuration.toSecondsPart());
+            timePanel.setTime(String.format("%02d:%02d:%02d", startDuration.toHours(), startDuration.toMinutesPart(),
+                    startDuration.toSecondsPart()));
         }
     }
 
@@ -237,7 +257,6 @@ public class EnvTestPanel_3 extends Page{
     }
 
     private void endTest(){
-        examMainPanel.saveAnswer(AnswerState.SOLVED);
-        list.add(new Event(Destination.LOGIN_PAGE, EventDataType.NAVIGATE, null));
+        list.add(new Event(Destination.SERVER, EventDataType.DISCONNECT, null));
     }
 }

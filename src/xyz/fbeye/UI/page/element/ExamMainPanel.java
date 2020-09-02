@@ -30,6 +30,7 @@ public class ExamMainPanel {
     private JLabel numberLabel;
     private FlatButton delayButton;
     private JTextArea questionText;
+    private JPanel answerPanel;
     private JTextArea answerArea;
     private JList<String> optionList;
     private FlatButton prevButton;
@@ -95,31 +96,31 @@ public class ExamMainPanel {
         questionText.setVisible(true);
         panel.add(questionText);
 
-        JPanel answerPanel = new JPanel();
+        answerPanel = new JPanel();
         location = ViewDisposer.getLocation(390, 505);
         size = ViewDisposer.getSize(720, 345);
         answerPanel.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
         answerPanel.setSize(size);
         answerPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         answerPanel.setLayout(new GridLayout());
+        answerPanel.setVisible(true);
         answerArea = new JTextArea();
         answerArea.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
         answerArea.setVisible(true);
         answerPanel.add(answerArea);
-        answerPanel.setVisible(true);
         panel.add(answerPanel);
 
         optionList = new JList<>();
         optionList.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
         optionList.setSize(size);
-        optionList.setFont(new Font("맑은고딕", Font.PLAIN, ViewDisposer.getFontSize(30)));
+        optionList.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
         optionList.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         optionList.setSelectionModel(new MultipleItemSelectionModel());
-        optionList.setVisible(false);
         optionList.setBackground(Color.WHITE);
         optionList.setSelectionBackground(new Color(255, 109, 112));
         optionList.setSelectionForeground(Color.BLACK);
         panel.add(optionList);
+        optionList.setVisible(false);
 
         prevButton = new FlatButton("이전");
         location = ViewDisposer.getLocation(655, 860);
@@ -182,7 +183,7 @@ public class ExamMainPanel {
 
         if(currentQuestion.type == QuestionType.DESCRIPTIVE){
             optionList.setVisible(false);
-            answerArea.setVisible(true);
+            answerPanel.setVisible(true);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
                 answerArea.setText(answer);
@@ -194,11 +195,10 @@ public class ExamMainPanel {
             panel.repaint();
         }
         else if(currentQuestion.type == QuestionType.ONE_CHOICE){
-            answerArea.setVisible(false);
+            answerPanel.setVisible(false);
             optionList.setListData(new Vector<>(currentQuestion.options));
             optionList.setSelectionModel(new DefaultListSelectionModel());
             optionList.setFixedCellHeight(optionList.getHeight() / currentQuestion.options.size());
-            optionList.setVisible(true);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
                 optionList.setSelectedIndex(Integer.parseInt(answer) - 1);
@@ -206,15 +206,15 @@ public class ExamMainPanel {
             else{
                 optionList.setSelectedIndex(-1);
             }
+            optionList.setVisible(true);
             panel.revalidate();
             panel.repaint();
         }
         else{
-            answerArea.setVisible(false);
+            answerPanel.setVisible(false);
             optionList.setListData(new Vector<>(currentQuestion.options));
             optionList.setSelectionModel(new MultipleItemSelectionModel());
             optionList.setFixedCellHeight(optionList.getHeight() / currentQuestion.options.size());
-            optionList.setVisible(true);
             String answer = answers.get(currentNumber).getAnswer();
             if(answer != null && !answer.equals("")){
                 String[] str = answer.split(",");
@@ -227,6 +227,7 @@ public class ExamMainPanel {
             else{
                 optionList.setSelectedIndex(-1);
             }
+            optionList.setVisible(true);
             panel.revalidate();
             panel.repaint();
         }

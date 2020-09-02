@@ -158,7 +158,9 @@ public class LoginPanel extends Page{
         DialogButtonInfo OKButton = new DialogButtonInfo();
         OKButton.setTextColor(new Color(255, 109, 112));
         OKButton.setTextFont(FontManager.getNanumGothicFont(Font.BOLD, ViewDisposer.getFontSize(30)));
-        OKButton.setText("종료").setOnClickListener(component -> System.exit(0));
+        OKButton.setText("종료").setOnClickListener(component -> {
+            System.exit(0);
+        });
 
         new FlatDialog.Builder().
                 setTitle("종료").
