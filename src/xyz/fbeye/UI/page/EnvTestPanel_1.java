@@ -84,7 +84,7 @@ public class EnvTestPanel_1 extends Page {
             }
             Event e = list.get(i);
             if(e.destination == Destination.ENV_TEST_1){
-                if(e.eventDataType == EventDataType.SIGNAL && e.data.equals("authOk")){
+                if(e.eventDataType == EventDataType.SIGNAL && e.data.equals("moblieOk")){
                     list.remove(i);
                     list.add(new Event(Destination.ENV_TEST_2, EventDataType.NAVIGATE, null));
                 }

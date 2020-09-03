@@ -52,8 +52,8 @@ public class FBEyeFrame {
         layout.rowHeights = new int[]{0};
         layout.rowWeights = new double[]{1};
         init();
-        connection.connect("localhost", 9000);//test
-        //connection.connect("fbeye.xyz", 10100);
+        //connection.connect("localhost", 9000);//test
+        connection.connect("fbeye.xyz", 10100);
         timer.schedule(task, 100, 100);
         addComponent(pageMap.get(currentPage).getPanel());
         pageMap.get(currentPage).startTimer();
@@ -65,7 +65,7 @@ public class FBEyeFrame {
         jsonMaker = new JsonMaker();
         jsonParser = new JsonParser();
         connection = new Connection(list);
-        //chatConnection = new ChatConnection("http://15.165.77.217:3000/", chatEventList);
+        chatConnection = new ChatConnection("http://15.165.77.217:3000/", chatEventList);
         mainFrame = new JFrame("FBEye");
         currentPage = Destination.LOGIN_PAGE;
         targetPage = Destination.NONE;
@@ -139,9 +139,14 @@ public class FBEyeFrame {
                 if(e.data != null){
                     if(e.eventDataType == EventDataType.DISCONNECT){
                         connection.disconnect();
+                        chatConnection.disconnect();
                     }
                     else if(e.eventDataType == EventDataType.CHAT){
                         chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
+                    }
+                    else if(e.eventDataType == EventDataType.LOGIN_CODE){
+                        connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
+                        chatEventList.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, e.data));
                     }
                     else{
                         connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
@@ -191,7 +196,12 @@ public class FBEyeFrame {
             else if(chatEventList.get(i).destination == Destination.SERVER){
                 Event e = chatEventList.get(i);
                 if(e.data != null){
-                    //chatConnection.send((String)e.data);
+                    if(e.eventDataType == EventDataType.LOGIN_CODE){
+                        chatConnection.connect((String)e.data);
+                    }
+                    else{
+                        chatConnection.send((String)e.data);
+                    }
                 }
                 chatEventList.remove(i);
             }

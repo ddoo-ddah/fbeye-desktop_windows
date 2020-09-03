@@ -5,9 +5,7 @@
  */
 package xyz.fbeye.datatype;
 
-import java.io.Serializable;
-
-public class LoginInfo implements Serializable {
+public class LoginInfo {
     public final String examCode;
     public final String userCode;
 

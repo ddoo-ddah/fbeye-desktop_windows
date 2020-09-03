@@ -5,6 +5,7 @@
  */
 package xyz.fbeye.UI.page;
 
+import xyz.fbeye.datatype.ChatInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
@@ -146,7 +147,7 @@ public class ExamPanel extends Page{
                     setQRCode((String)e.data);
                 }
                 else if(e.eventDataType == EventDataType.CHAT){
-                    chatReceived((String)e.data);
+                    chatReceived((ChatInfo)e.data);
                 }
                 list.remove(i);
             }
@@ -178,9 +179,8 @@ public class ExamPanel extends Page{
                 duration.toSecondsPart()));
     }
 
-    private void chatReceived(String chat){
-        chatPanel.addChatLog(chat);
-        chatPanel.resetChatContent();
+    private void chatReceived(ChatInfo chat){
+        chatPanel.addChat(chat);
         chatPanel.getPanel().revalidate();
         chatPanel.getPanel().repaint();
     }

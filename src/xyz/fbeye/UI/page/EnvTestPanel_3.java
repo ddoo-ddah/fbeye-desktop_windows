@@ -8,6 +8,8 @@ package xyz.fbeye.UI.page;
 import com.mommoo.flat.button.FlatButton;
 import com.mommoo.util.FontManager;
 import xyz.fbeye.UI.page.element.*;
+import xyz.fbeye.datatype.ChatInfo;
+import xyz.fbeye.datatype.UserInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
@@ -151,7 +153,7 @@ public class EnvTestPanel_3 extends Page{
             Event e = list.get(i);
             if(e.destination == Destination.ENV_TEST_3){
                 if(e.eventDataType == EventDataType.CHAT){
-                    chatReceived((String)e.data);
+                    chatReceived((ChatInfo) e.data);
                 }
                 else if(e.eventDataType == EventDataType.EXAM_INFO){
                     examInfoReceived((ExamInfo) e.data);
@@ -214,9 +216,9 @@ public class EnvTestPanel_3 extends Page{
         }
     }
 
-    private void chatReceived(String chat){
-        chatPanel.addChatLog(chat);
-        chatPanel.resetChatContent();
+    private void chatReceived(ChatInfo chat){
+        chatPanel.addChat(chat);
+        chatPanel.getPanel().revalidate();
         chatPanel.getPanel().repaint();
     }
 

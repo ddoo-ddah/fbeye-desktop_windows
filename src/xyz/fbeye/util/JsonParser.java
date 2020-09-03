@@ -61,10 +61,12 @@ public class JsonParser {
             List<Float> data = new ArrayList<>();
             JSONArray array = jsonObject.getJSONArray("data");
             for(int i = 0; i < array.length(); i++){
-                data.add((float)array.get(i));
+                data.add(((Number)array.get(i)).floatValue());
             }
             result.add(data);
-            EyeGazeEstimator.getInstance().setData(data);
+            if(EyeGazeEstimator.getInstance() != null){
+                EyeGazeEstimator.getInstance().setData(data);
+            }
         }
         else{
             return null;

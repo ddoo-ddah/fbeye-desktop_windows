@@ -5,6 +5,7 @@
  */
 package xyz.fbeye.UI.page.element;
 
+import xyz.fbeye.datatype.ChatInfo;
 import xyz.fbeye.util.ViewDisposer;
 import com.mommoo.flat.button.FlatButton;
 import com.mommoo.flat.component.FlatScrollPane;
@@ -24,15 +25,15 @@ import java.util.Vector;
 public class ChatPanel {
     private JPanel panel;
     private Point panelLocation;
-    private Vector<String> chatLog;
     private boolean sendChat;
 
-    private FlatListView<FlatLabel> chatList;
+    //private FlatListView<FlatLabel> chatList;
+    private FlatListView<JPanel> chatList2;
+    private FlatScrollPane scrollPane;
     private FlatTextField chatText;
     private FlatButton sendButton;
 
     public ChatPanel(int x, int y){
-        chatLog = new Vector<>();
         sendChat = false;
         panelLocation = ViewDisposer.getLocation(x, y);
         initPanel();
@@ -68,12 +69,20 @@ public class ChatPanel {
         chatListPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
         chatListPanel.setLayout(new GridLayout());
 
-        chatList = new FlatListView<>();
+        /*chatList = new FlatListView<>();
         chatList.setBackground(new Color(255, 255, 222));
         chatList.setMultiSelectionMode(false);
         chatList.setSingleSelectionMode(false);
-        chatList.setSelectionColor(new Color(255, 255, 222));
-        FlatScrollPane scrollPane = new FlatScrollPane(chatList.getComponent());
+        chatList.setSelectionColor(new Color(255, 255, 222));*/
+        //
+        chatList2 = new FlatListView<>();
+        chatList2.setBackground(new Color(255, 255, 222));
+        chatList2.setMultiSelectionMode(false);
+        chatList2.setSingleSelectionMode(false);
+        chatList2.setSelectionColor(new Color(255, 255, 222));
+        //
+        //FlatScrollPane scrollPane = new FlatScrollPane(chatList.getComponent());
+        scrollPane = new FlatScrollPane(chatList2.getComponent());
         scrollPane.setBackground(new Color(255, 255, 222));
         scrollPane.setVerticalScrollTrackColor(new Color(255, 222, 222));
         scrollPane.setAutoscrolls(true);
@@ -122,13 +131,6 @@ public class ChatPanel {
 
     private void onSendButtonClicked(){
         if(!chatText.getText().equals("")){
-            //chatLog.add(chatText.getText());
-            FlatLabel item = new FlatLabel(chatText.getText());
-            item.setBackground(new Color(255, 255, 222));
-            item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(22)));
-            chatList.addItem(item);
-            chatText.setText(null);
-            chatText.setHint("채팅 입력");//test
             sendChat = true;
         }
         else{
@@ -136,17 +138,20 @@ public class ChatPanel {
         }
     }
 
-    public void resetChatContent(){
-        chatText.setText("");
-        //chatList.setListData(chatLog);
-    }
-
-    public void addChatLog(String chat){
-        chatLog.add(chat);
-        FlatLabel item = new FlatLabel(chat);
+    public void addChat(ChatInfo chat){
+        /*FlatLabel item = new FlatLabel(chat.message);
         item.setBackground(new Color(255, 255, 222));
         item.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(18)));
-        chatList.addItem(item);
+        chatList.addItem(item);*/
+        //
+        JPanel item2 = new ChatItemPanel(chat).getPanel();
+        chatList2.addItem(item2, chatList2.getItemSize());
+        //
+    }
+
+    public void resetChatContent(){
+        chatText.setText(null);
+        chatText.setHint("채팅 입력");
     }
 
     public JPanel getPanel(){
