@@ -19,5 +19,7 @@ public enum EventDataType {
     ENCRYPTED_QUESTION,
     QUESTION_KEY,
     EYE,
-    DISCONNECT
+    DISCONNECT,
+    DIALOG_REQUEST,
+    DIALOG_RESULT
 }

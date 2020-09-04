@@ -177,7 +177,14 @@ public class EnvTestPanel_3 extends Page{
                         list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
                         isDecrypted = true;
                     }
-
+                }
+                else if(e.eventDataType == EventDataType.DIALOG_RESULT){
+                    if((int)e.data == 0){
+                        endTest();
+                    }
+                    else if((int)e.data == 2){
+                        System.exit(0);
+                    }
                 }
                 list.remove(i);
             }
@@ -201,9 +208,9 @@ public class EnvTestPanel_3 extends Page{
         Duration startDuration = Duration.between(now.toLocalDateTime(), examInfo.startTime);
         Duration endDuration = Duration.between(now.toLocalDateTime(), examInfo.endTime);
         if(endDuration.toSeconds() <= 0){
-            JOptionPane.showMessageDialog(panel, "시험이 종료 되었습니다.", "시험 종료", JOptionPane.INFORMATION_MESSAGE);
-            timer.cancel();
             endTest();
+            list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "examEnd"));
+            timer.cancel();
         }
         if(startDuration.toSeconds() <= 0){
             timePanel.setTime("00:00:00");

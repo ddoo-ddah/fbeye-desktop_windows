@@ -149,6 +149,14 @@ public class ExamPanel extends Page{
                 else if(e.eventDataType == EventDataType.CHAT){
                     chatReceived((ChatInfo)e.data);
                 }
+                else if(e.eventDataType == EventDataType.DIALOG_RESULT){
+                    if((int)e.data == 0){
+                        endTest();
+                    }
+                    else if((int)e.data == 2){
+                        System.exit(0);
+                    }
+                }
                 list.remove(i);
             }
         }
@@ -171,7 +179,7 @@ public class ExamPanel extends Page{
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         Duration duration = Duration.between(now.toLocalDateTime(), examInfo.endTime);
         if(duration.toSeconds() <= 0){
-            JOptionPane.showMessageDialog(panel, "시험이 종료 되었습니다.", "시험 종료", JOptionPane.INFORMATION_MESSAGE);
+            list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "examEnd"));
             timer.cancel();
             endTest();
         }
@@ -198,15 +206,11 @@ public class ExamPanel extends Page{
         examMainPanel.saveAnswer(AnswerState.SOLVED);
         list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("endExam")));
         list.add(new Event(Destination.SERVER, EventDataType.ANSWER, AnswerTypeConverter.convert(examMainPanel.getAnswer())));
-        JOptionPane.showMessageDialog(panel, "수고하셨습니다.", "제출", JOptionPane.INFORMATION_MESSAGE);
         list.add(new Event(Destination.SERVER, EventDataType.DISCONNECT, null));
-        System.exit(0);
+        list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "submissionEnd"));
     }
 
     private void onSubmissionButtonClicked(){
-        int result = JOptionPane.showConfirmDialog(panel, "제출하시겠습니까?", "제출", JOptionPane.YES_NO_OPTION);
-        if(result == JOptionPane.YES_OPTION){
-            endTest();
-        }
+        list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "submission"));
     }
 }

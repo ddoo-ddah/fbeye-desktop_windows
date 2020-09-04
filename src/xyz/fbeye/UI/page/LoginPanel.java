@@ -5,6 +5,8 @@
  */
 package xyz.fbeye.UI.page;
 
+import xyz.fbeye.UI.page.element.ChooseDialog;
+import xyz.fbeye.UI.page.element.InfoDialog;
 import xyz.fbeye.datatype.LoginInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
@@ -12,8 +14,6 @@ import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
 import xyz.fbeye.util.ViewDisposer;
 import com.mommoo.flat.button.FlatButton;
-import com.mommoo.flat.frame.FlatDialog;
-import com.mommoo.flat.frame.dialog.DialogButtonInfo;
 import com.mommoo.flat.text.textfield.FlatTextField;
 import com.mommoo.flat.text.textfield.format.FlatTextFormat;
 import com.mommoo.util.FontManager;
@@ -26,7 +26,6 @@ import java.util.TimerTask;
 public class LoginPanel extends Page{
     private FlatTextField inputExamId;
     private FlatTextField inputUserId;
-    private FlatButton exitButton;
 
     public LoginPanel(EventList list){
         super(list);
@@ -99,19 +98,6 @@ public class LoginPanel extends Page{
         JLabel logoImageLabel = new JLabel(img);
         logoImageLabel.setVisible(true);
         addComponent(logoImageLabel, 1, 1, 1, 1, GridBagConstraints.BOTH);
-
-        exitButton = new FlatButton("   X   ");
-        exitButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
-        exitButton.setBackground(Color.WHITE);
-        exitButton.setForeground(Color.BLACK);
-        exitButton.addActionListener(e -> {
-            exitButton.setBackground(Color.RED);
-            onExitButtonClicked();
-        });
-        exitButton.setVisible(true);
-        constraints.anchor = GridBagConstraints.FIRST_LINE_END;
-        addComponent(exitButton, 3, 0, 1 , 1, GridBagConstraints.NONE);
-        constraints.anchor = GridBagConstraints.CENTER;
     }
 
     @Override
@@ -125,16 +111,7 @@ public class LoginPanel extends Page{
                     login();
                 }
                 else{
-                    new FlatDialog.Builder().
-                            setTitle("로그인 오류").
-                            setContent("입력한 정보에 맞는 시험이 없습니다.").
-                            setWindowTranslucent(0.2f).
-                            setLocationScreenCenter().
-                            setButtonText("확인").
-                            setButtonTextColor(new Color(255, 109, 112)).
-                            setButtonTextFont(FontManager.getNanumGothicFont(Font.BOLD, ViewDisposer.getFontSize(30))).
-                            build().
-                            show();
+                    list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "loginError"));
                 }
                 list.remove(i);
             }
@@ -152,27 +129,5 @@ public class LoginPanel extends Page{
     private void onLoginButtonClicked(){
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
         list.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, loginData));
-    }
-
-    private void onExitButtonClicked(){
-        DialogButtonInfo OKButton = new DialogButtonInfo();
-        OKButton.setTextColor(new Color(255, 109, 112));
-        OKButton.setTextFont(FontManager.getNanumGothicFont(Font.BOLD, ViewDisposer.getFontSize(30)));
-        OKButton.setText("종료").setOnClickListener(component -> {
-            System.exit(0);
-        });
-
-        new FlatDialog.Builder().
-                setTitle("종료").
-                setContent("종료하시겠습니까?").
-                setWindowTranslucent(0.2f).
-                setLocationScreenCenter().
-                setButtonText("취소").
-                setButtonTextColor(new Color(255, 109, 112)).
-                setButtonTextFont(FontManager.getNanumGothicFont(Font.BOLD, ViewDisposer.getFontSize(30))).
-                setOnClickListener(component -> exitButton.setBackground(Color.WHITE)).
-                appendButton(OKButton).
-                build().
-                show();
     }
 }

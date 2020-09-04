@@ -16,6 +16,7 @@ import com.mommoo.flat.text.label.FlatLabel;
 import com.mommoo.util.FontManager;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,6 +58,7 @@ public class EnvTestPanel_1 extends Page {
         infoText.setLocation(location);
         infoText.setSize(size);
         infoText.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
+        infoText.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
         infoText.setVisible(true);
         panel.add(infoText);
 
@@ -84,7 +86,7 @@ public class EnvTestPanel_1 extends Page {
             }
             Event e = list.get(i);
             if(e.destination == Destination.ENV_TEST_1){
-                if(e.eventDataType == EventDataType.SIGNAL && e.data.equals("moblieOk")){
+                if(e.eventDataType == EventDataType.SIGNAL && e.data.equals("mobileOk")){
                     list.remove(i);
                     list.add(new Event(Destination.ENV_TEST_2, EventDataType.NAVIGATE, null));
                 }
