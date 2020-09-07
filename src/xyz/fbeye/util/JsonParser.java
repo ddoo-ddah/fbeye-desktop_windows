@@ -26,7 +26,19 @@ public class JsonParser {
     public List<Object> parse(JSONObject jsonObject){
         String type = jsonObject.getString("type");
         List<Object> result = new ArrayList<>();
-        if(type.equals("RES")){
+        if(type.equals("EYE")){
+            result.add(EventDataType.EYE);
+            List<Float> data = new ArrayList<>();
+            JSONArray array = jsonObject.getJSONArray("data");
+            for(int i = 0; i < array.length(); i++){
+                data.add(((Number)array.get(i)).floatValue());
+            }
+            result.add(data);
+            if(EyeGazeEstimator.getInstance() != null){
+                EyeGazeEstimator.getInstance().setData(data);
+            }
+        }
+        else if(type.equals("RES")){
             result.add(EventDataType.SIGNAL);
             result.add(jsonObject.get("data"));
         }
@@ -55,18 +67,6 @@ public class JsonParser {
         else if(type.equals("KEY")){
             result.add(EventDataType.QUESTION_KEY);
             result.add(jsonObject.getString("data"));
-        }
-        else if(type.equals("EYE")){
-            result.add(EventDataType.EYE);
-            List<Float> data = new ArrayList<>();
-            JSONArray array = jsonObject.getJSONArray("data");
-            for(int i = 0; i < array.length(); i++){
-                data.add(((Number)array.get(i)).floatValue());
-            }
-            result.add(data);
-            if(EyeGazeEstimator.getInstance() != null){
-                EyeGazeEstimator.getInstance().setData(data);
-            }
         }
         else{
             return null;

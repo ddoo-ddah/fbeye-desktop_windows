@@ -32,6 +32,7 @@ import java.util.TimerTask;
 public class ExamPanel extends Page{
     private ExamInfo examInfo;
     private int squaredQRSize;
+    private boolean isFail;
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -45,6 +46,7 @@ public class ExamPanel extends Page{
     public ExamPanel(EventList list){
         super(list);
         initPanel();
+        isFail = false;
         timer = new Timer();
         task = new TimerTask() {
             @Override
@@ -156,6 +158,16 @@ public class ExamPanel extends Page{
                     else if((int)e.data == 2){
                         System.exit(0);
                     }
+                }
+                else if(e.eventDataType == EventDataType.SIGNAL){
+                    if(e.data.equals("authFailed")){
+                        examMainPanel.getPanel().setVisible(false);
+                    }
+                    else if(e.data.equals("authOk") && isFail){
+                        examMainPanel.getPanel().setVisible(true);
+                    }
+                    examMainPanel.getPanel().revalidate();
+                    examMainPanel.getPanel().repaint();
                 }
                 list.remove(i);
             }
