@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
-import java.util.List;
 
 public class SetupCanvas {
 
@@ -77,7 +76,6 @@ public class SetupCanvas {
                         next++;
                     }
                     if(next>=XSplitFactor*YSplitFactor){
-                        //next=0;  //여기서 캔슬
                         isEnd = true;
                     }
                     clearScreen();

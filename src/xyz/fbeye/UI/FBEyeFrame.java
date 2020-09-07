@@ -160,10 +160,19 @@ public class FBEyeFrame {
 
     private void restore(){
         if(targetPage != Destination.NONE){
+            if(targetPage == Destination.ENV_TEST_2){
+                exitPanel.setVisible(false);
+            }
+            else{
+                exitPanel.setVisible(true);
+            }
+            exitPanel.revalidate();
+            exitPanel.repaint();
             if(targetPage == Destination.EXAM_PAGE){
                 mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
                 mainFrame.repaint();
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+                list.add(new Event(Destination.EXAM_PAGE, EventDataType.SIGNAL, "startScreenTimer"));
             }
             pageMap.get(currentPage).endTimer();
             pageMap.get(targetPage).startTimer();

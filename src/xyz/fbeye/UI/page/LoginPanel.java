@@ -5,8 +5,6 @@
  */
 package xyz.fbeye.UI.page;
 
-import xyz.fbeye.UI.page.element.ChooseDialog;
-import xyz.fbeye.UI.page.element.InfoDialog;
 import xyz.fbeye.datatype.LoginInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
@@ -24,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class LoginPanel extends Page{
+    private FlatButton loginButton;
     private FlatTextField inputExamId;
     private FlatTextField inputUserId;
 
@@ -58,11 +57,9 @@ public class LoginPanel extends Page{
 
     @Override
     protected void setView(){
-        FlatButton loginButton = new FlatButton("     인 증     ");
+        loginButton = new FlatButton("     인 증     ");
         loginButton.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(50)));
-        loginButton.addActionListener(e -> {
-            onLoginButtonClicked();
-        });
+        loginButton.addActionListener(e -> onLoginButtonClicked());
         loginButton.setForeground(Color.BLACK);
         loginButton.setBackground(new Color(255, 109, 112));
         loginButton.setVisible(true);
@@ -107,10 +104,11 @@ public class LoginPanel extends Page{
                 break;
             }
             if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.SIGNAL){
-                if(list.get(i).data.equals("ok")){
+                if(list.get(i).data.equals("signOk")){
                     login();
                 }
-                else{
+                else if(list.get(i).data.equals("signFailed")){
+                    loginButton.setEnabled(true);
                     list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "loginError"));
                 }
                 list.remove(i);
@@ -127,6 +125,7 @@ public class LoginPanel extends Page{
     }
 
     private void onLoginButtonClicked(){
+        loginButton.setEnabled(false);
         String loginData = new LoginInfo(inputExamId.getText(), inputUserId.getText()).toString();
         list.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, loginData));
     }

@@ -21,7 +21,7 @@ public class MemoPanel {
     private GridBagConstraints constraints;
 
     private JPanel memoArea;
-    private FlatTextArea memoText;
+    private JTextArea memoText;
 
     public MemoPanel(int x, int y){
         panelLocation = ViewDisposer.getLocation(x, y);
@@ -38,23 +38,32 @@ public class MemoPanel {
         panel = new JPanel();
         panel.setSize(ViewDisposer.getSize(300, 610));
         panel.setLocation(panelLocation);
-        panel.setLayout(layout);
+        panel.setLayout(null);
         panel.setBackground(new Color(255, 255, 222));
         panel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
         setView();
         panel.setVisible(true);
     }
 
-    private void setView(){
+    private void setView(){//1130 225
         JLabel text = new JLabel("메모지");
+        Point location = ViewDisposer.getLocation(1135, 230);
+        Dimension size = ViewDisposer.getSize(280, 25);
+        text.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
+        text.setSize(size);
         text.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
         text.setVisible(true);
-        addComponent(text, 1, 0, 2, 1, GridBagConstraints.BOTH);
+        panel.add(text);
+        //addComponent(text, 1, 0, 2, 1, GridBagConstraints.BOTH);
+
         memoArea = new JPanel();
+        location = ViewDisposer.getLocation(1135, 260);
+        size = ViewDisposer.getSize(290, 560);
+        memoArea.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
+        memoArea.setSize(size);
         memoArea.setBackground(new Color(255, 255, 222));
         memoArea.setLayout(new GridLayout());
-
-        memoText = new FlatTextArea();
+        memoText = new JTextArea();
         memoText.setBackground(new Color(255, 255, 222));
         memoText.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(20)));
         memoText.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));
@@ -63,7 +72,8 @@ public class MemoPanel {
         scrollPane.setVerticalScrollTrackColor(new Color(255, 222, 222));
         scrollPane.setVisible(true);
         memoArea.add(scrollPane);
-        addComponent(memoArea, 1, 2, 1, 1, GridBagConstraints.BOTH);
+        panel.add(memoArea);
+        //addComponent(memoArea, 1, 2, 1, 1, GridBagConstraints.BOTH);
     }
 
     protected void addComponent(Component c, int col, int row, int width, int height, int fill){
