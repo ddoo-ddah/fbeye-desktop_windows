@@ -16,11 +16,17 @@ public class FBEyeNotice {
     public FBEyeNotice(){
         List<String> notices = new ArrayList<>();
         notices.add("이용 시 주의사항");
-        notices.add("\t1.주의사항"); //테스트 데이터
-        notices.add("\t2.주의사항");
-        notices.add("\t3.주의사항");
-        notices.add("\t4.주의사항");
-        notices.add("\t5.주의사항");
+        notices.add("");
+        notices.add("");
+        notices.add("\t1.제출 버튼 이외에는 저장되지 않습니다.");
+        notices.add("");
+        notices.add("\t2.응시 버튼을 누른 후 지시에 따라주세요.");
+        notices.add("");
+        notices.add("\t3.휴대폰 배터리를 충분히 확보해 주세요.");
+        notices.add("");
+        notices.add("\t4.시험 중 시선을 모니터 밖으로 돌릴 경우 부정행위로 간주될 수 있습니다.");
+        notices.add("");
+        notices.add("\t5.QR코드가 계속 인식되지 않으면 시험 문제가 보이지 않습니다.");
 
         this.notices = notices;
 

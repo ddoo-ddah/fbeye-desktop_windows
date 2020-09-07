@@ -172,6 +172,7 @@ public class FBEyeFrame {
                 mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
                 mainFrame.repaint();
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+                list.add(new Event(Destination.EXAM_PAGE, EventDataType.SIGNAL, "startScreenTimer"));
             }
             pageMap.get(currentPage).endTimer();
             pageMap.get(targetPage).startTimer();

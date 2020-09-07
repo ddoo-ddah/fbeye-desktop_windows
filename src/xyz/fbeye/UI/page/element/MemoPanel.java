@@ -21,7 +21,7 @@ public class MemoPanel {
     private GridBagConstraints constraints;
 
     private JPanel memoArea;
-    private FlatTextArea memoText;
+    private JTextArea memoText;
 
     public MemoPanel(int x, int y){
         panelLocation = ViewDisposer.getLocation(x, y);
@@ -54,7 +54,7 @@ public class MemoPanel {
         memoArea.setBackground(new Color(255, 255, 222));
         memoArea.setLayout(new GridLayout());
 
-        memoText = new FlatTextArea();
+        memoText = new JTextArea();
         memoText.setBackground(new Color(255, 255, 222));
         memoText.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(20)));
         memoText.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(2)));

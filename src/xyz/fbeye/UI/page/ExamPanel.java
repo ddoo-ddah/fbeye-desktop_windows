@@ -11,10 +11,7 @@ import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
 import xyz.fbeye.datatype.examdata.ExamInfo;
-import xyz.fbeye.util.AnswerTypeConverter;
-import xyz.fbeye.util.QRGenerator;
-import xyz.fbeye.util.SignalDataMaker;
-import xyz.fbeye.util.ViewDisposer;
+import xyz.fbeye.util.*;
 import com.mommoo.flat.button.FlatButton;
 import com.mommoo.util.FontManager;
 import xyz.fbeye.UI.page.element.*;
@@ -23,6 +20,7 @@ import xyz.fbeye.datatype.examdata.AnswerState;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -133,6 +131,16 @@ public class ExamPanel extends Page{
         panel.repaint();
     }
 
+    private void sendScreenImage(){
+        BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        panel.paint(g);
+        g.dispose();
+
+        String data = ImageEncoder.encode(image);
+        list.add(new Event(Destination.SERVER, EventDataType.SCREEN, "\"data\":\"" + data + "\""));
+    }
+
     @Override
     protected void restore(){
         for(int i = 0; i < list.size(); i++){
@@ -161,10 +169,20 @@ public class ExamPanel extends Page{
                 }
                 else if(e.eventDataType == EventDataType.SIGNAL){
                     if(e.data.equals("authFailed")){
+                        isFail = true;
                         examMainPanel.getPanel().setVisible(false);
                     }
                     else if(e.data.equals("authOk") && isFail){
+                        isFail = false;
                         examMainPanel.getPanel().setVisible(true);
+                    }
+                    else if(e.data.equals("startScreenTimer")){
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                sendScreenImage();
+                            }
+                        }, 1, 1000);
                     }
                     examMainPanel.getPanel().revalidate();
                     examMainPanel.getPanel().repaint();

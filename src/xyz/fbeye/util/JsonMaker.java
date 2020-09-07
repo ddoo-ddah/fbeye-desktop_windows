@@ -18,11 +18,12 @@ public class JsonMaker {
     }
 
     private void init(){
-        typeString = new EnumMap<EventDataType, String>(EventDataType.class);
+        typeString = new EnumMap<>(EventDataType.class);
         typeString.put(EventDataType.LOGIN_CODE, "SIN");
         typeString.put(EventDataType.SIGNAL, "REQ");
         typeString.put(EventDataType.COORDINATE, "BTN");
         typeString.put(EventDataType.ANSWER, "ANS");
+        typeString.put(EventDataType.SCREEN, "SCR");
     }
 
     public JSONObject makeJson(EventDataType type, String data){
