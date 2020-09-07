@@ -5,6 +5,7 @@ import xyz.fbeye.datatype.Pair;
 
 import java.util.*;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class EyeGazeEstimator {
     private static EyeGazeEstimator instance;
@@ -15,6 +16,7 @@ public class EyeGazeEstimator {
     private List<Float> lastData;
 
     private Runnable gazeDrawer;
+    private BiConsumer<Integer,Integer> cheatSender;
 
     private EyeGazeEstimator(int x, int y){
         data = new ArrayList[x][y];
@@ -57,6 +59,7 @@ public class EyeGazeEstimator {
     public List<Pair<Float,Float>> getEstimatedArea(List<Float> dataset, int xSplitSize, int ySplitSize) {
 
         List<Pair<Float,Float>> result = new ArrayList<>();
+        System.out.println(Arrays.toString(dataset.toArray()));
 
         float et = (dataset.get(0) + dataset.get(2))/2;
         float ep = (dataset.get(1) + dataset.get(3))/2;
@@ -124,7 +127,7 @@ public class EyeGazeEstimator {
         }
         if(gazeDrawer != null){
 
-            Float[] average = new Float[9];
+            Float[] average = new Float[7];
             Arrays.fill(average,0.0f);
 
             for (List<Float> dataset : datasets) {
@@ -144,6 +147,10 @@ public class EyeGazeEstimator {
     }
     public void setDrawer(Runnable gazeDrawer){
         this.gazeDrawer = gazeDrawer;
+    }
+
+    public void setCheatDataSender(BiConsumer<Integer,Integer> sender){
+        cheatSender = sender;
     }
 
 }
