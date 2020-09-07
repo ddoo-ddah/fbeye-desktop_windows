@@ -138,7 +138,7 @@ public class ExamPanel extends Page{
         g.dispose();
 
         String data = ImageEncoder.encode(image);
-        list.add(new Event(Destination.SERVER, EventDataType.SCREEN, "\"data\":\"" + data + "\""));
+        list.add(new Event(Destination.SERVER, EventDataType.SCREEN, "{\"screen\":\"" + data + "\"}"));
     }
 
     @Override

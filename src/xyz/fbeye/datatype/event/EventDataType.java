@@ -22,5 +22,6 @@ public enum EventDataType {
     DISCONNECT,
     DIALOG_REQUEST,
     DIALOG_RESULT,
-    SCREEN
+    SCREEN,
+    CHEAT
 }

@@ -44,8 +44,16 @@ public class ChatConnection {
         socket.emit("desktop-welcome", new JSONObject("{" + loginData + "}"));
     }
 
-    public void send(String msg){
-        socket.emit("desktop-chat", new JSONObject("{\"message\":\"" + msg + "\"}"));
+    public void send(EventDataType type, String data){
+        if(type == EventDataType.SCREEN){
+            socket.emit("screen", new JSONObject(data));
+        }
+        else if(type == EventDataType.CHAT){
+            socket.emit("desktop-chat", new JSONObject("{\"message\":\"" + data + "\"}"));
+        }
+        else if(type == EventDataType.CHEAT){
+            socket.emit("cheat", new JSONObject(data));
+        }
     }
 
     public void disconnect(){

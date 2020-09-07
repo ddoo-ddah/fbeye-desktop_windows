@@ -24,6 +24,7 @@ public class JsonMaker {
         typeString.put(EventDataType.COORDINATE, "BTN");
         typeString.put(EventDataType.ANSWER, "ANS");
         typeString.put(EventDataType.SCREEN, "SCR");
+        typeString.put(EventDataType.CHEAT, "DET");
     }
 
     public JSONObject makeJson(EventDataType type, String data){

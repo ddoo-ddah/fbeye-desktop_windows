@@ -8,7 +8,6 @@ package xyz.fbeye.util;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class ImageEncoder {

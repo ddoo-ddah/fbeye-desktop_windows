@@ -7,7 +7,6 @@ package xyz.fbeye.UI.page.element;
 
 import xyz.fbeye.util.ViewDisposer;
 import com.mommoo.flat.component.FlatScrollPane;
-import com.mommoo.flat.text.textarea.FlatTextArea;
 import com.mommoo.util.FontManager;
 
 import javax.swing.*;
@@ -54,7 +53,6 @@ public class MemoPanel {
         text.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(24)));
         text.setVisible(true);
         panel.add(text);
-        //addComponent(text, 1, 0, 2, 1, GridBagConstraints.BOTH);
 
         memoArea = new JPanel();
         location = ViewDisposer.getLocation(1135, 260);
@@ -73,17 +71,6 @@ public class MemoPanel {
         scrollPane.setVisible(true);
         memoArea.add(scrollPane);
         panel.add(memoArea);
-        //addComponent(memoArea, 1, 2, 1, 1, GridBagConstraints.BOTH);
-    }
-
-    protected void addComponent(Component c, int col, int row, int width, int height, int fill){
-        constraints.gridx = col;
-        constraints.gridy = row;
-        constraints.gridwidth = width;
-        constraints.gridheight = height;
-        constraints.fill = fill;
-        layout.setConstraints(c, constraints);
-        panel.add(c);
     }
 
     public JPanel getPanel(){

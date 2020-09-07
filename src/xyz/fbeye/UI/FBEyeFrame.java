@@ -17,6 +17,7 @@ import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
 import xyz.fbeye.net.ChatConnection;
 import xyz.fbeye.net.Connection;
+import xyz.fbeye.util.EyeGazeEstimator;
 import xyz.fbeye.util.JsonMaker;
 import xyz.fbeye.util.JsonParser;
 import org.json.JSONObject;
@@ -169,10 +170,12 @@ public class FBEyeFrame {
             exitPanel.revalidate();
             exitPanel.repaint();
             if(targetPage == Destination.EXAM_PAGE){
+                EyeGazeEstimator.getInstance().setCheatDataSender(this::sendCheatData);
                 mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
                 mainFrame.repaint();
                 mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
                 list.add(new Event(Destination.EXAM_PAGE, EventDataType.SIGNAL, "startScreenTimer"));
+
             }
             pageMap.get(currentPage).endTimer();
             pageMap.get(targetPage).startTimer();
@@ -194,12 +197,15 @@ public class FBEyeFrame {
             else if(list.get(i).destination == Destination.SERVER){
                 Event e = list.get(i);
                 if(e.data != null){
-                    if(e.eventDataType == EventDataType.DISCONNECT){
+                    if(e.eventDataType == EventDataType.CHAT){
+                        chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
+                    }
+                    else if(e.eventDataType == EventDataType.SCREEN){
+                        chatEventList.add(new Event(Destination.SERVER, EventDataType.SCREEN, e.data));
+                    }
+                    else if(e.eventDataType == EventDataType.DISCONNECT){
                         connection.disconnect();
                         chatConnection.disconnect();
-                    }
-                    else if(e.eventDataType == EventDataType.CHAT){
-                        chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
                     }
                     else if(e.eventDataType == EventDataType.LOGIN_CODE){
                         connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
@@ -263,7 +269,7 @@ public class FBEyeFrame {
                         chatConnection.connect((String)e.data);
                     }
                     else{
-                        chatConnection.send((String)e.data);
+                        chatConnection.send(e.eventDataType, (String)e.data);
                     }
                 }
                 chatEventList.remove(i);
@@ -309,5 +315,10 @@ public class FBEyeFrame {
             System.exit(0);
         }
         exitButton.setBackground(Color.WHITE);
+    }
+
+    private void sendCheatData(int x, int y){
+        list.add(new Event(Destination.SERVER, EventDataType.CHEAT, "\"data\":[" + x + "," + y + "]"));
+        chatEventList.add(new Event(Destination.SERVER, EventDataType.CHEAT, "{\"cheat\":[" + x + "," + y + "]}"));
     }
 }
