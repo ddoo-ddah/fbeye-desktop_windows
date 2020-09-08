@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
-import java.util.List;
 
 public class SetupCanvas {
 
@@ -26,12 +25,12 @@ public class SetupCanvas {
     private int YSplit;
 
     private boolean isEnd;
+    private boolean isDrawGaze = true;
 
     {
         canvas = new Canvas();
         isEnd = false;
     }
-
 
     /**
      * Configure Environment of canvas after frame has visibility.
@@ -53,6 +52,7 @@ public class SetupCanvas {
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
                 if(e.getKeyCode() == KeyEvent.VK_Q){
+                    isDrawGaze = false;
                     isEnd = true;
                 }
 
@@ -92,20 +92,19 @@ public class SetupCanvas {
     }
 
     public void drawEyeGaze(){
+        if(isDrawGaze){
+            drawFeaturePointer();
+            drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
+            Pair<Float,Float> p = EyeGazeEstimator.getInstance().getPossiblePosition();
 
-        clearScreen();
-        drawFeaturePointer();
-        drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
-//        drawDegree();
-        canvas.setForeground(Color.BLUE);
+            if(p != null){
+                canvas.setForeground(Color.BLUE);
+                Graphics2D g2d = (Graphics2D) bufferStrategy.getDrawGraphics();
+                g2d.fillOval(Math.round(p.first) - 10, Math.round(p.second) - 10, 20,20);
+            }
 
-        List<Pair<Float,Float>> pos = EyeGazeEstimator.getInstance().getAllEstimatedPositions();
-
-        Graphics2D g2d = (Graphics2D) bufferStrategy.getDrawGraphics();
-        for (Pair<Float, Float> p : pos) {
-            g2d.fillOval(Math.round(p.first) - 10, Math.round(p.second) - 10, 20,20);
+            finishDraw();
         }
-        finishDraw();
     }
 
     public void clearScreen(){
@@ -132,8 +131,6 @@ public class SetupCanvas {
 
             for (int j = 0; j < YSplitFactor; j++) {
                 Pair<Float,Float> data = EyeGazeEstimator.getInstance().getData(i,j);
-//                List<Float> data = new ArrayList<>(List.of(EyeGazeEstimator.getInstance().getData(i, j)));
-//                data.addAll();
 
                 int xoffset = 30;
                 int yoffset = 40;
@@ -147,9 +144,6 @@ public class SetupCanvas {
 
                 g2d.drawString(String.valueOf(data.first),i*XSplit+xoffset, j*YSplit+yoffset+10*0);
                 g2d.drawString(String.valueOf(data.second),i*XSplit+xoffset, j*YSplit+yoffset+10*1);
-//                for (int k = 0; k < data.size(); k++) {
-//                    g2d.drawString(String.valueOf(data.get(k)),i*XSplit+xoffset, j*YSplit+yoffset+10*k);
-//                }
             }
 
         }
