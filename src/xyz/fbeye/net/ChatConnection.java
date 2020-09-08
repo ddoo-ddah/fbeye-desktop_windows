@@ -33,6 +33,10 @@ public class ChatConnection {
                 //연결 해제(본인)
             }).on("force-disconnect", objects -> {
                 //연결 해제(물리)
+            }).on("request-data", objects -> {
+                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, "requestScreen"));
+            }).on("stop-data", objects -> {
+                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, "stopRequestScreen"));
             });
         }catch (Exception e){
             e.printStackTrace();

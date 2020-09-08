@@ -31,6 +31,7 @@ public class ExamPanel extends Page{
     private ExamInfo examInfo;
     private int squaredQRSize;
     private boolean isFail;
+    private Timer screenTimer;
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -176,13 +177,17 @@ public class ExamPanel extends Page{
                         isFail = false;
                         examMainPanel.getPanel().setVisible(true);
                     }
-                    else if(e.data.equals("startScreenTimer")){
-                        new Timer().schedule(new TimerTask() {
+                    else if(e.data.equals("requestScreen")) {
+                        screenTimer = new Timer();
+                        screenTimer.schedule(new TimerTask() {
                             @Override
                             public void run() {
                                 sendScreenImage();
                             }
                         }, 1, 1000);
+                    }
+                    else if(e.data.equals("stopRequestScreen")){
+                        screenTimer.cancel();
                     }
                     examMainPanel.getPanel().revalidate();
                     examMainPanel.getPanel().repaint();
