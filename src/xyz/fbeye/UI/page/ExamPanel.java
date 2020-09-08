@@ -241,6 +241,7 @@ public class ExamPanel extends Page{
         examMainPanel.saveAnswer(AnswerState.SOLVED);
         list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("endExam")));
         list.add(new Event(Destination.SERVER, EventDataType.ANSWER, AnswerTypeConverter.convert(examMainPanel.getAnswer())));
+        EyeGazeEstimator.getInstance().stopDetect();
         list.add(new Event(Destination.SERVER, EventDataType.DISCONNECT, null));
         list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "submissionEnd"));
     }
