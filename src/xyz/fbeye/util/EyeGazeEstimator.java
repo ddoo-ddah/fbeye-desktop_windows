@@ -12,14 +12,22 @@ public class EyeGazeEstimator {
 
     private final Deque<List<Float>> datasets;
     private final List<EyeData>[][] data;
+
+    private final int xSplitSize;
+    private final int ySplitSize;
     private boolean isUsable = false;
     private List<Float> lastData;
 
     private Runnable gazeDrawer;
-    private BiConsumer<Integer,Integer> cheatSender;
 
-    private EyeGazeEstimator(int x, int y){
-        data = new ArrayList[x][y];
+    private boolean isDetectCheat = false;
+
+    private BiConsumer<Integer,Integer> cheatReporter;
+
+    private EyeGazeEstimator(int xSplitNumber, int ySplitNumber, int xSplitSize, int ySplitSize){
+        this.xSplitSize = xSplitSize;
+        this.ySplitSize = ySplitSize;
+        data = new ArrayList[xSplitNumber][ySplitNumber];
         datasets = new LinkedList<>();
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[i].length; j++) {
@@ -28,8 +36,9 @@ public class EyeGazeEstimator {
         }
     }
 
-    public static void init(int x, int y){
-        instance = new EyeGazeEstimator(x, y);
+
+    public static void init(int xSplitNumber, int ySplitNumber, int xSplitSize, int ySplitSize) {
+        instance = new EyeGazeEstimator(xSplitNumber, ySplitNumber, xSplitSize, ySplitSize);
     }
 
 
@@ -41,26 +50,24 @@ public class EyeGazeEstimator {
         return false;
     }
 
-    public List<Pair<Float,Float>> getEstimatedAreaH() {
+    public List<Pair<Float,Float>> getAllEstimatedPositions() {
         List<Pair<Float,Float>> result = new ArrayList<>();
 
         for(int i = 0; i < data.length; ++i) {
             for (int j = i; j < data[i].length; ++j) {
-                result.addAll(getEstimatedArea(lastData,i,j));
+                result.addAll(getEstimatedPosition(lastData,i,j));
             }
         }
         return result;
     }
 
-    public List<Pair<Float,Float>> getEstimatedArea() {
-        return getEstimatedArea(lastData,1,1);
+    public List<Pair<Float,Float>> getEstimatedPosition() {
+        return getEstimatedPosition(lastData,1,1);
     }
 
-    public List<Pair<Float,Float>> getEstimatedArea(List<Float> dataset, int xSplitSize, int ySplitSize) {
+    public List<Pair<Float,Float>> getEstimatedPosition(List<Float> dataset, int xSplitSize, int ySplitSize) {
 
         List<Pair<Float,Float>> result = new ArrayList<>();
-        System.out.println(Arrays.toString(dataset.toArray()));
-
         float et = (dataset.get(0) + dataset.get(2))/2;
         float ep = (dataset.get(1) + dataset.get(3))/2;
         Pair<Float,Float> target = new Pair<>(et,ep);
@@ -78,8 +85,7 @@ public class EyeGazeEstimator {
 
                 if(inArea){
                     Pair<Float,Float> innerCoord = ShapeCalculator.calcRelateCoord(area,target);
-                    System.out.println(innerCoord);
-                    result.add(new Pair<>(i + innerCoord.first*xSplitSize, j+ innerCoord.second*ySplitSize));
+                    result.add(new Pair<>((i + innerCoord.first*xSplitSize)*xSplitSize, (j+ innerCoord.second*ySplitSize)*ySplitSize));
 
                 }
 
@@ -140,17 +146,41 @@ public class EyeGazeEstimator {
             }
             lastData = Arrays.asList(average);
             gazeDrawer.run();
+
+            if(isDetectCheat){
+                detectCheat();
+            }
+
         }
         if(datasets.size()>4)
             isUsable = true;
 
     }
+
+    private void detectCheat() {
+
+
+        getAllEstimatedPositions();
+
+
+//        cheatReporter.accept();
+
+    }
+
+    public void startDetect(){
+        isDetectCheat = true;
+    }
+
+    public void stopDetect(){
+        isDetectCheat = false;
+    }
+
     public void setDrawer(Runnable gazeDrawer){
         this.gazeDrawer = gazeDrawer;
     }
 
     public void setCheatDataSender(BiConsumer<Integer,Integer> sender){
-        cheatSender = sender;
+        cheatReporter = sender;
     }
 
 }

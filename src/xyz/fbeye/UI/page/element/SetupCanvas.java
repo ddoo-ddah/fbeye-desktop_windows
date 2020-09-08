@@ -7,18 +7,16 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.util.List;
 
 public class SetupCanvas {
 
-    private Canvas canvas;
+    private final Canvas canvas;
 
     BufferStrategy bufferStrategy;
-    private Toolkit toolkit;
 
-    private final int XSplitFactor = 7;
+    private final int XSplitFactor = 6;
     private final int YSplitFactor = 5;
-    //private final int XSplitFactor = 2;//test
-    //private final int YSplitFactor = 2;//test
     private final int VALIDATION_SIZE = 5;
 
     private int next = 0;
@@ -27,13 +25,10 @@ public class SetupCanvas {
     private int XSplit;
     private int YSplit;
 
-    private boolean gazeDrawEnable = false;
-
     private boolean isEnd;
 
     {
         canvas = new Canvas();
-        toolkit = Toolkit.getDefaultToolkit();
         isEnd = false;
     }
 
@@ -49,44 +44,45 @@ public class SetupCanvas {
         XSplit = (screenSize.width-30) / (XSplitFactor-1);
         YSplit = (screenSize.height-30) / (YSplitFactor-1);
 
-        //EyeGazeEstimator.init(XSplitFactor, YSplitFactor);
-        //EyeGazeEstimator.getInstance().setDrawer(this::drawEyeGaze);
-        clearScreen();
-        drawFeaturePointer();
-        drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
-        finishDraw();
+        EyeGazeEstimator.init(XSplitFactor, YSplitFactor, XSplit, YSplit);
+        EyeGazeEstimator.getInstance().setDrawer(this::drawEyeGaze);
+
 
         canvas.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if(e.getKeyCode() == KeyEvent.VK_E){
-                    gazeDrawEnable = !gazeDrawEnable;
+                if(e.getKeyCode() == KeyEvent.VK_Q){
+                    isEnd = true;
                 }
 
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
-                    boolean success = true;//test
-                    //boolean success = EyeGazeEstimator.getInstance().collect(next%XSplitFactor, next/XSplitFactor);
+                    boolean success = EyeGazeEstimator.getInstance().collect(next%XSplitFactor, next/XSplitFactor);
 
                     if(success){
                         currentCount++;
                     }
-                    if(currentCount>VALIDATION_SIZE){
+                    if(currentCount>=VALIDATION_SIZE){
                         currentCount = 0;
                         next++;
                     }
                     if(next>=XSplitFactor*YSplitFactor){
-                        isEnd = true;
+                        next = 0;
                     }
-                    clearScreen();
-                    drawFeaturePointer();
-                    drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
-                    finishDraw();
+                    drawOnce();
                 }
 
             }
         });
         canvas.requestFocus();
+    }
+
+    public void drawOnce(){
+        clearScreen();
+        drawFeaturePointer();
+        drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
+        drawDegree();
+        finishDraw();
     }
 
     public void drawTargetPoint(int x, int y){
@@ -95,23 +91,22 @@ public class SetupCanvas {
         g2d.fillOval(x*XSplit, y*YSplit, 30,30);
     }
 
-    /*public void drawEyeGaze(){
-        if(!gazeDrawEnable){
-            return;
-        }
+    public void drawEyeGaze(){
+
         clearScreen();
         drawFeaturePointer();
+        drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
+//        drawDegree();
         canvas.setForeground(Color.BLUE);
 
-        List<Pair<Float,Float>> pos = EyeGazeEstimator.getInstance().getEstimatedAreaH();
-
+        List<Pair<Float,Float>> pos = EyeGazeEstimator.getInstance().getAllEstimatedPositions();
 
         Graphics2D g2d = (Graphics2D) bufferStrategy.getDrawGraphics();
         for (Pair<Float, Float> p : pos) {
-            g2d.fillOval(Math.round(p.first * XSplit) - 25, Math.round(p.second*YSplit) - 25, 50,50);
+            g2d.fillOval(Math.round(p.first) - 10, Math.round(p.second) - 10, 20,20);
         }
         finishDraw();
-    }*/
+    }
 
     public void clearScreen(){
         Graphics2D g2d = (Graphics2D) bufferStrategy.getDrawGraphics();
@@ -127,6 +122,40 @@ public class SetupCanvas {
                 g2d.fillOval(i*XSplit, j*YSplit, 30,30);
             }
         }
+    }
+
+    public void drawDegree(){
+
+        canvas.setForeground(Color.BLACK);
+        Graphics2D g2d = (Graphics2D) bufferStrategy.getDrawGraphics();
+        for(int i = 0; i<XSplitFactor; ++i){
+
+            for (int j = 0; j < YSplitFactor; j++) {
+                Pair<Float,Float> data = EyeGazeEstimator.getInstance().getData(i,j);
+//                List<Float> data = new ArrayList<>(List.of(EyeGazeEstimator.getInstance().getData(i, j)));
+//                data.addAll();
+
+                int xoffset = 30;
+                int yoffset = 40;
+                if(i == XSplitFactor-1){
+                    xoffset = -50;
+                }
+
+                if(j == YSplitFactor-1){
+                    yoffset = -30;
+                }
+
+                g2d.drawString(String.valueOf(data.first),i*XSplit+xoffset, j*YSplit+yoffset+10*0);
+                g2d.drawString(String.valueOf(data.second),i*XSplit+xoffset, j*YSplit+yoffset+10*1);
+//                for (int k = 0; k < data.size(); k++) {
+//                    g2d.drawString(String.valueOf(data.get(k)),i*XSplit+xoffset, j*YSplit+yoffset+10*k);
+//                }
+            }
+
+        }
+        g2d.dispose();
+
+
     }
 
     public void finishDraw(){
