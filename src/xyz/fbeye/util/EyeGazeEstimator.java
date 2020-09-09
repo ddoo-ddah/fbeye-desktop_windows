@@ -12,7 +12,6 @@ public class EyeGazeEstimator {
 
     private final Deque<List<Float>> datasets;
     private final List<EyeData>[][] data;
-    private final int circleRadius = 15;
 
     private final int xSplitLen;
     private final int ySplitLen;
@@ -135,8 +134,8 @@ public class EyeGazeEstimator {
         if(ShapeCalculator.isInside(area,target)){
             Pair<Float,Float> innerCoord = ShapeCalculator.calcRelateCoord(area,target);
             return new Pair<>(
-                    (xStart + innerCoord.first * xSplitSize) * xSplitLen + circleRadius,
-                    (yStart + innerCoord.second * ySplitSize) * ySplitLen + circleRadius);
+                    (xStart + innerCoord.first * xSplitSize) * xSplitLen,
+                    (yStart + innerCoord.second * ySplitSize) * ySplitLen);
         }
         return null;
     }
