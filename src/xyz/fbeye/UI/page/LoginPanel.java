@@ -91,7 +91,7 @@ public class LoginPanel extends Page{
         inputUserId.setVisible(true);
         addComponent(inputUserId, 1, 5, 1, 1, GridBagConstraints.BOTH);
 
-        ImageIcon img = new ImageIcon("files/FBI.png");
+        ImageIcon img = new ImageIcon("files/logo.png");
         JLabel logoImageLabel = new JLabel(img);
         logoImageLabel.setVisible(true);
         addComponent(logoImageLabel, 1, 1, 1, 1, GridBagConstraints.BOTH);
