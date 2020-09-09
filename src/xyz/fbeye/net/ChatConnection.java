@@ -34,9 +34,11 @@ public class ChatConnection {
             }).on("force-disconnect", objects -> {
                 //연결 해제(물리)
             }).on("request-data", objects -> {
-                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, "requestScreen"));
+                String userCode = ((JSONObject)objects[0]).getString("userCode");
+                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, userCode + "#requestScreen"));
             }).on("stop-data", objects -> {
-                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, "stopRequestScreen"));
+                String userCode = ((JSONObject)objects[0]).getString("userCode");
+                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, userCode + "#stopRequestScreen"));
             });
         }catch (Exception e){
             e.printStackTrace();

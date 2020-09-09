@@ -6,6 +6,7 @@
 package xyz.fbeye.UI.page;
 
 import xyz.fbeye.datatype.ChatInfo;
+import xyz.fbeye.datatype.UserInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
@@ -32,6 +33,7 @@ public class ExamPanel extends Page{
     private int squaredQRSize;
     private boolean isFail;
     private Timer screenTimer;
+    private UserInfo userInfo;
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -168,6 +170,9 @@ public class ExamPanel extends Page{
                         System.exit(0);
                     }
                 }
+                else if(e.eventDataType == EventDataType.USER_INFO){
+                    this.userInfo = (UserInfo)e.data;
+                }
                 else if(e.eventDataType == EventDataType.SIGNAL){
                     if(e.data.equals("authFailed")){
                         isFail = true;
@@ -177,17 +182,23 @@ public class ExamPanel extends Page{
                         isFail = false;
                         examMainPanel.getPanel().setVisible(true);
                     }
-                    else if(e.data.equals("requestScreen")) {
-                        screenTimer = new Timer();
-                        screenTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                sendScreenImage();
-                            }
-                        }, 1, 1000);
+                    else if(((String)e.data).contains("requestScreen")) {
+                        String userCode = ((String) e.data).split("#")[0];
+                        if(userCode == userInfo.id){
+                            screenTimer = new Timer();
+                            screenTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    sendScreenImage();
+                                }
+                            }, 1, 1000);
+                        }
                     }
-                    else if(e.data.equals("stopRequestScreen")){
-                        screenTimer.cancel();
+                    else if(((String)e.data).contains("stopRequestScreen")){
+                        String userCode = ((String) e.data).split("#")[0];
+                        if(userCode == userInfo.id) {
+                            screenTimer.cancel();
+                        }
                     }
                     examMainPanel.getPanel().revalidate();
                     examMainPanel.getPanel().repaint();

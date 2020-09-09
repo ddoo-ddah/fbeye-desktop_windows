@@ -198,6 +198,7 @@ public class ExamInfoPanel extends Page{
 
     private void userInfoReceived(UserInfo userInfo){
         this.userInfo = userInfo;
+        list.add(new Event(Destination.EXAM_PAGE, EventDataType.USER_INFO, userInfo));
         Vector<String> result = this.userInfo.getInfoList();
         for(int i = 0; i < result.size(); i++){
             FlatLabel item = new FlatLabel(result.get(i));
