@@ -71,7 +71,10 @@ public class Connection {
                         int c = reader.read();
                         receiveString.append((char)c);
                     }while(reader.ready());
-                    list.add(new Event(Destination.MANAGER, EventDataType.HEADER, receiveString.toString()));
+
+                    if(receiveString.charAt(0) == '{'){
+                        list.add(new Event(Destination.MANAGER, EventDataType.HEADER, receiveString.toString()));
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
