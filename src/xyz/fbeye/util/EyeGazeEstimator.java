@@ -24,6 +24,8 @@ public class EyeGazeEstimator {
 
     private BiConsumer<Integer,Integer> cheatReporter;
 
+    private int cheatCount = 0;
+
     private EyeGazeEstimator(int xSplitNumber, int ySplitNumber, int xSplitLen, int ySplitLen){
         this.xSplitLen = xSplitLen;
         this.ySplitLen = ySplitLen;
@@ -187,7 +189,13 @@ public class EyeGazeEstimator {
 
         if(pos == null){
             //Not yet Implemented.
-            cheatReporter.accept(-100,-100);
+            cheatCount += 1;
+            if(cheatCount > 3){
+                cheatReporter.accept(-100,-100);
+                cheatCount = 0;
+            }
+        }else{
+            cheatCount = 0;
         }
 
 
