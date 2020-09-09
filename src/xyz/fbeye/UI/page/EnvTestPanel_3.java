@@ -214,6 +214,7 @@ public class EnvTestPanel_3 extends Page{
         }
         if(startDuration.toSeconds() <= 0){
             timePanel.setTime("00:00:00");
+            list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("readyExam")));
             startTestButton.setEnabled(true);
             panel.repaint();
         }
