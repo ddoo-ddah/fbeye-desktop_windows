@@ -183,9 +183,13 @@ public class EyeGazeEstimator {
 
     private void detectCheat() {
 
-        getAllEstimatedPositions();
-        //Not yet Implemented.
-//        cheatReporter.accept();
+        Pair<Float,Float> pos = getPossiblePosition();
+
+        if(pos == null){
+            //Not yet Implemented.
+            cheatReporter.accept(-100,-100);
+        }
+
 
     }
 
