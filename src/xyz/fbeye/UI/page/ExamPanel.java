@@ -47,6 +47,7 @@ public class ExamPanel extends Page{
     public ExamPanel(EventList list){
         super(list);
         initPanel();
+        screenTimer = null;
         isFail = false;
         timer = new Timer();
         task = new TimerTask() {
@@ -194,10 +195,10 @@ public class ExamPanel extends Page{
                             }, 1, 1000);
                         }
                     }
-                    else if(((String)e.data).contains("stopRequestScreen")){
-                        String userCode = ((String) e.data).split("#")[0];
-                        if(userCode == userInfo.id) {
+                    else if(e.data.equals("stopRequestScreen")){
+                        if(screenTimer != null){
                             screenTimer.cancel();
+                            screenTimer = null;
                         }
                     }
                     examMainPanel.getPanel().revalidate();

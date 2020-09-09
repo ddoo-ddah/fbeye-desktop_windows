@@ -37,8 +37,7 @@ public class ChatConnection {
                 String userCode = ((JSONObject)objects[0]).getString("userCode");
                 list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, userCode + "#requestScreen"));
             }).on("stop-data", objects -> {
-                String userCode = ((JSONObject)objects[0]).getString("userCode");
-                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, userCode + "#stopRequestScreen"));
+                list.add(new Event(Destination.MANAGER, EventDataType.SIGNAL, "stopRequestScreen"));
             });
         }catch (Exception e){
             e.printStackTrace();
