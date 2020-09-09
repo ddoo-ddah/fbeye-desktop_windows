@@ -56,9 +56,9 @@ public class EyeGazeEstimator {
 
         for (int i = 0; i < data.size(); i++) {
             Pair<Float,Float> currentData = data.get(i);
-            indexedData.add(new Pair<>(i, (float) (Math.pow(currentData.first, 3.0) + Math.pow(currentData.second, 3.0)) ));
+            indexedData.add(new Pair<>(i, currentData.first + currentData.second ));
         }
-        indexedData.sort((first, second) -> Math.round(first.second - second.second));
+        indexedData.sort((first, second) -> Float.compare(first.second ,second.second));
 
         float sumX = 0.0f;
         float sumY = 0.0f;

@@ -93,10 +93,11 @@ public class SetupCanvas {
 
     public void drawEyeGaze(){
         if(isDrawGaze){
+            clearScreen();
             drawFeaturePointer();
             drawTargetPoint(next%XSplitFactor, next/XSplitFactor);
-            Pair<Float,Float> p = EyeGazeEstimator.getInstance().getPossiblePosition();
 
+            Pair<Float,Float> p = EyeGazeEstimator.getInstance().getPossiblePosition();
             if(p != null){
                 canvas.setForeground(Color.BLUE);
                 Graphics2D g2d = (Graphics2D) bufferStrategy.getDrawGraphics();
