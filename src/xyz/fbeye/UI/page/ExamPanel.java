@@ -49,13 +49,7 @@ public class ExamPanel extends Page{
         initPanel();
         screenTimer = null;
         isFail = false;
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                restore();
-            }
-        };
+        timer = null;
     }
 
     @Override

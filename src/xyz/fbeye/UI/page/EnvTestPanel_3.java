@@ -29,8 +29,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class EnvTestPanel_3 extends Page{
     private ExamInfo sampleExamInfo;
@@ -52,13 +50,7 @@ public class EnvTestPanel_3 extends Page{
         super(list);
         isDecrypted = false;
         initPanel();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                restore();
-            }
-        };
+        timer = null;
     }
 
     @Override
@@ -164,18 +156,20 @@ public class EnvTestPanel_3 extends Page{
                 else if(e.eventDataType == EventDataType.ENCRYPTED_QUESTION){
                     encryptedQuestion = (String)e.data;
                 }
-                else if(e.eventDataType == EventDataType.QUESTION_KEY){
+                else if(e.eventDataType == EventDataType.QUESTION_KEY && encryptedQuestion != null){
                     try{
                         encryptedQuestion = Decryptor.decrypt(encryptedQuestion, (String)e.data);
                     }catch (Exception exception){
                         exception.printStackTrace();
                     }
-                    List<QuestionInfo> questions = QuestionMaker.makeQuestion(new JSONObject(encryptedQuestion));
-                    if(questions.size() != 0){
-                        ExamInfo newExamInfo = new ExamInfo(examInfo.name, examInfo.count,
-                                examInfo.startTime, examInfo.endTime, questions);
-                        list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
-                        isDecrypted = true;
+                    if(encryptedQuestion != null){
+                        List<QuestionInfo> questions = QuestionMaker.makeQuestion(new JSONObject(encryptedQuestion));
+                        if(questions.size() != 0){
+                            ExamInfo newExamInfo = new ExamInfo(examInfo.name, examInfo.count,
+                                    examInfo.startTime, examInfo.endTime, questions);
+                            list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
+                            isDecrypted = true;
+                        }
                     }
                 }
                 else if(e.eventDataType == EventDataType.DIALOG_RESULT){

@@ -18,8 +18,6 @@ import com.mommoo.util.FontManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class LoginPanel extends Page{
     private FlatButton loginButton;
@@ -29,13 +27,7 @@ public class LoginPanel extends Page{
     public LoginPanel(EventList list){
         super(list);
         initPanel();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                restore();
-            }
-        };
+        timer = null;
     }
 
     @Override
@@ -115,6 +107,10 @@ public class LoginPanel extends Page{
             }
             else if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.QR_CODE_DATA){
                 list.add(new Event(Destination.ENV_TEST_1, EventDataType.QR_CODE_DATA, list.get(i).data));
+                list.remove(i);
+            }
+            else if(list.get(i).destination == Destination.LOGIN_PAGE && list.get(i).eventDataType == EventDataType.ENCRYPTED_QUESTION){
+                list.add(new Event(Destination.ENV_TEST_3, EventDataType.ENCRYPTED_QUESTION, list.get(i).data));
                 list.remove(i);
             }
         }

@@ -23,7 +23,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.*;
-import java.util.Timer;
 
 public class ExamInfoPanel extends Page{
     private ExamInfo examInfo;
@@ -31,7 +30,6 @@ public class ExamInfoPanel extends Page{
 
     private FlatListView<FlatLabel> userInfoListView;
     private FlatListView<FlatLabel> examInfoListView;
-    //private FlatCheckBox readNoticeCheck;
     private JCheckBox readNoticeCheck;
     private FlatButton takeExamButton;
 
@@ -40,13 +38,7 @@ public class ExamInfoPanel extends Page{
         examInfo = null;
         userInfo = null;
         initPanel();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                restore();
-            }
-        };
+        timer = null;
     }
 
     @Override
@@ -171,6 +163,9 @@ public class ExamInfoPanel extends Page{
                 }
                 else if(e.eventDataType == EventDataType.QR_CODE_DATA){
                     list.add(new Event(Destination.ENV_TEST_1, EventDataType.QR_CODE_DATA, e.data));
+                }
+                else if(e.eventDataType == EventDataType.ENCRYPTED_QUESTION){
+                    list.add(new Event(Destination.ENV_TEST_3, EventDataType.ENCRYPTED_QUESTION, e.data));
                 }
                 list.remove(i);
             }

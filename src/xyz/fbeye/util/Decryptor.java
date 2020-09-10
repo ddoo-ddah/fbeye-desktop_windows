@@ -9,13 +9,15 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class Decryptor {
     public static String decrypt(String str, String key){
         try{
+            System.out.println(key);
             String iv = key.substring(0, 16);
             byte[] keyBytes = new byte[16];
-            byte[] b = key.getBytes(StandardCharsets.UTF_8);
+            byte[] b = Base64.getDecoder().decode(key);
             int len = b.length;
             if(len > keyBytes.length){
                 len = keyBytes.length;

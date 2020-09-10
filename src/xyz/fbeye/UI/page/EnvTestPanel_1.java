@@ -18,8 +18,6 @@ import com.mommoo.util.FontManager;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class EnvTestPanel_1 extends Page {
     private JLabel topQRCode;
@@ -28,13 +26,7 @@ public class EnvTestPanel_1 extends Page {
     public EnvTestPanel_1(EventList list){
         super(list);
         initPanel();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                restore();
-            }
-        };
+        timer = null;
     }
 
     @Override

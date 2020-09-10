@@ -19,8 +19,6 @@ import xyz.fbeye.util.ViewDisposer;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class EnvTestPanel_2 extends Page{
     private SetupCanvas canvas;
@@ -29,14 +27,7 @@ public class EnvTestPanel_2 extends Page{
     public EnvTestPanel_2(EventList list){
         super(list);
         initPanel();
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                restore();
-            }
-        };
-
+        timer = null;
     }
 
     @Override

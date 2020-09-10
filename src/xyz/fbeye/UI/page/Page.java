@@ -43,8 +43,14 @@ public abstract class Page {
     public void startTimer(){
         if(timer == null){
             timer = new Timer();
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    restore();
+                }
+            };
+            timer.schedule(task, 200, 200);
         }
-        timer.schedule(task, 200, 200);
     }
 
     public void endTimer(){
