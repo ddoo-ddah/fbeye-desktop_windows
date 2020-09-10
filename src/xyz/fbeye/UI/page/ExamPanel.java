@@ -29,7 +29,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ExamPanel extends Page{
-    private ExamInfo examInfo;
+    public static ExamInfo examInfo;
     private int squaredQRSize;
     private boolean isFail;
     private Timer screenTimer;
@@ -103,6 +103,12 @@ public class ExamPanel extends Page{
         submissionPanel.add(submissionButton);
         submissionPanel.setVisible(true);
         panel.add(submissionPanel);
+
+        examMainPanel = new ExamMainPanel(375, 70, examInfo);
+        panel.add(examMainPanel.getPanel());
+        questionNumberPanel = new QuestionNumberPanel(70, 70, examInfo.count);
+        panel.add(questionNumberPanel.getPanel());
+        panel.repaint();
     }
 
     private void setQuestionNumberBackground(){
@@ -149,7 +155,7 @@ public class ExamPanel extends Page{
             Event e = list.get(i);
             if(e.destination == Destination.EXAM_PAGE){
                 if(e.eventDataType == EventDataType.EXAM_INFO){
-                    examInfoReceived((ExamInfo)e.data);
+                    //examInfoReceived((ExamInfo)e.data);
                 }
                 else if(e.eventDataType == EventDataType.QR_CODE_DATA){
                     setQRCode((String)e.data);
@@ -234,14 +240,14 @@ public class ExamPanel extends Page{
         chatPanel.getPanel().repaint();
     }
 
-    private void examInfoReceived(ExamInfo examInfo){
-        this.examInfo = examInfo;
-        examMainPanel = new ExamMainPanel(375, 70, examInfo);
-        panel.add(examMainPanel.getPanel());
-        questionNumberPanel = new QuestionNumberPanel(70, 70, examInfo.count);
-        panel.add(questionNumberPanel.getPanel());
-        panel.repaint();
-    }
+//    private void examInfoReceived(ExamInfo examInfo){
+//        this.examInfo = examInfo;
+//        examMainPanel = new ExamMainPanel(375, 70, examInfo);
+//        panel.add(examMainPanel.getPanel());
+//        questionNumberPanel = new QuestionNumberPanel(70, 70, examInfo.count);
+//        panel.add(questionNumberPanel.getPanel());
+//        panel.repaint();
+//    }
 
     private void endTest(){
         examMainPanel.saveAnswer(AnswerState.SOLVED);

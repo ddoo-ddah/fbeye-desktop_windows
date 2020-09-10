@@ -170,7 +170,8 @@ public class EnvTestPanel_3 extends Page{
                         if(questions.size() != 0){
                             ExamInfo newExamInfo = new ExamInfo(examInfo.name, examInfo.count,
                                     examInfo.startTime, examInfo.endTime, questions);
-                            list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
+                            ExamPanel.examInfo = newExamInfo;
+                            //list.add(new Event(Destination.EXAM_PAGE, EventDataType.EXAM_INFO, newExamInfo));
                             isDecrypted = true;
                         }
                     }

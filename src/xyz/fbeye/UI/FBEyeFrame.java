@@ -127,7 +127,7 @@ public class FBEyeFrame {
         pageMap.put(Destination.ENV_TEST_1, new EnvTestPanel_1(list));
         pageMap.put(Destination.ENV_TEST_2, new EnvTestPanel_2(list));
         pageMap.put(Destination.ENV_TEST_3, new EnvTestPanel_3(list));
-        pageMap.put(Destination.EXAM_PAGE, new ExamPanel(list));
+
     }
 
     private void initMainFrame(){
@@ -135,7 +135,7 @@ public class FBEyeFrame {
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        //mainFrame.setAlwaysOnTop(true);
+        mainFrame.setAlwaysOnTop(true);
         mainFrame.setUndecorated(true);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -178,6 +178,7 @@ public class FBEyeFrame {
             exitPanel.revalidate();
             exitPanel.repaint();
             if(targetPage == Destination.EXAM_PAGE){
+                pageMap.put(Destination.EXAM_PAGE, new ExamPanel(list));
                 EyeGazeEstimator.getInstance().setCheatDataSender(this::sendCheatData);
                 mainFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
                 mainFrame.repaint();
