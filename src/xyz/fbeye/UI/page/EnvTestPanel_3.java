@@ -210,7 +210,6 @@ public class EnvTestPanel_3 extends Page{
         if(endDuration.toSeconds() <= 0){
             endTest();
             list.add(new Event(Destination.MANAGER, EventDataType.DIALOG_REQUEST, "examEnd"));
-            timer.cancel();
         }
         if(startDuration.toSeconds() <= 0){
             timePanel.setTime("00:00:00");
@@ -260,7 +259,6 @@ public class EnvTestPanel_3 extends Page{
 
     private void startTest(){
         if(isDecrypted){
-            timer.cancel();
             list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("startExam")));
             list.add(new Event(Destination.EXAM_PAGE, EventDataType.NAVIGATE, null));
         }
@@ -268,5 +266,6 @@ public class EnvTestPanel_3 extends Page{
 
     private void endTest(){
         list.add(new Event(Destination.SERVER, EventDataType.DISCONNECT, null));
+        list.add(new Event(Destination.ENV_TEST_3, EventDataType.DIALOG_RESULT, 2));
     }
 }

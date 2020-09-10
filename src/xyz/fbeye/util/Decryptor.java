@@ -9,8 +9,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Base64;
 
 public class Decryptor {
     public static String decrypt(String str, String key){

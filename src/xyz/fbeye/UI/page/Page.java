@@ -41,11 +41,15 @@ public abstract class Page {
     }
 
     public void startTimer(){
+        if(timer == null){
+            timer = new Timer();
+        }
         timer.schedule(task, 200, 200);
     }
 
     public void endTimer(){
         timer.cancel();
+        timer = null;
     }
 
     public JPanel getPanel(){
