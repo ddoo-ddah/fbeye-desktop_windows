@@ -147,65 +147,69 @@ public class ExamPanel extends Page{
 
     @Override
     protected void restore(){
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i) == null){
-                list.remove(i);
-                break;
-            }
-            Event e = list.get(i);
-            if(e.destination == Destination.EXAM_PAGE){
-                if(e.eventDataType == EventDataType.EXAM_INFO){
-                    //examInfoReceived((ExamInfo)e.data);
+        try{
+            for(int i = 0; i < list.size(); i++){
+                if(list.get(i) == null){
+                    list.remove(i);
+                    break;
                 }
-                else if(e.eventDataType == EventDataType.QR_CODE_DATA){
-                    setQRCode((String)e.data);
-                }
-                else if(e.eventDataType == EventDataType.CHAT){
-                    chatReceived((ChatInfo)e.data);
-                }
-                else if(e.eventDataType == EventDataType.DIALOG_RESULT){
-                    if((int)e.data == 0){
-                        endTest();
+                Event e = list.get(i);
+                if(e.destination == Destination.EXAM_PAGE){
+                    if(e.eventDataType == EventDataType.EXAM_INFO){
+                        //examInfoReceived((ExamInfo)e.data);
                     }
-                    else if((int)e.data == 2){
-                        System.exit(0);
+                    else if(e.eventDataType == EventDataType.QR_CODE_DATA){
+                        setQRCode((String)e.data);
                     }
-                }
-                else if(e.eventDataType == EventDataType.USER_INFO){
-                    this.userInfo = (UserInfo)e.data;
-                }
-                else if(e.eventDataType == EventDataType.SIGNAL){
-                    if(e.data.equals("authFailed")){
-                        isFail = true;
-                        examMainPanel.getPanel().setVisible(false);
+                    else if(e.eventDataType == EventDataType.CHAT){
+                        chatReceived((ChatInfo)e.data);
                     }
-                    else if(e.data.equals("authOk") && isFail){
-                        isFail = false;
-                        examMainPanel.getPanel().setVisible(true);
-                    }
-                    else if(((String)e.data).contains("requestScreen")) {
-                        String userCode = ((String) e.data).split("#")[0];
-                        if(userCode == userInfo.id){
-                            screenTimer = new Timer();
-                            screenTimer.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    sendScreenImage();
-                                }
-                            }, 1, 1000);
+                    else if(e.eventDataType == EventDataType.DIALOG_RESULT){
+                        if((int)e.data == 0){
+                            endTest();
+                        }
+                        else if((int)e.data == 2){
+                            System.exit(0);
                         }
                     }
-                    else if(e.data.equals("stopRequestScreen")){
-                        if(screenTimer != null){
-                            screenTimer.cancel();
-                            screenTimer = null;
-                        }
+                    else if(e.eventDataType == EventDataType.USER_INFO){
+                        this.userInfo = (UserInfo)e.data;
                     }
-                    examMainPanel.getPanel().revalidate();
-                    examMainPanel.getPanel().repaint();
+                    else if(e.eventDataType == EventDataType.SIGNAL){
+                        if(e.data.equals("authFailed")){
+                            isFail = true;
+                            examMainPanel.getPanel().setVisible(false);
+                        }
+                        else if(e.data.equals("authOk") && isFail){
+                            isFail = false;
+                            examMainPanel.getPanel().setVisible(true);
+                        }
+                        else if(((String)e.data).contains("requestScreen")) {
+                            String userCode = ((String) e.data).split("#")[0];
+                            if(userCode == userInfo.id){
+                                screenTimer = new Timer();
+                                screenTimer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        sendScreenImage();
+                                    }
+                                }, 1, 1000);
+                            }
+                        }
+                        else if(e.data.equals("stopRequestScreen")){
+                            if(screenTimer != null){
+                                screenTimer.cancel();
+                                screenTimer = null;
+                            }
+                        }
+                        examMainPanel.getPanel().revalidate();
+                        examMainPanel.getPanel().repaint();
+                    }
+                    list.remove(i);
                 }
-                list.remove(i);
             }
+        }catch (IndexOutOfBoundsException e1){
+
         }
 
         if(examMainPanel.getIsChanged()) {

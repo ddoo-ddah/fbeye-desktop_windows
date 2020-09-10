@@ -108,7 +108,7 @@ public class FBEyeFrame {
         jsonMaker = new JsonMaker();
         jsonParser = new JsonParser();
         connection = new Connection(list);
-        chatConnection = new ChatConnection("http://15.165.77.217:3000/", chatEventList);
+        chatConnection = new ChatConnection("http://fbeye.xyz:3000", chatEventList);
         mainFrame = new JFrame("FBEye");
         currentPage = Destination.LOGIN_PAGE;
         targetPage = Destination.NONE;
@@ -198,100 +198,112 @@ public class FBEyeFrame {
             targetPage = Destination.NONE;
         }
 
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i) == null){
-                break;
-            }
-            else if(list.get(i).destination == Destination.SERVER){
-                Event e = list.get(i);
-                if(e.data != null){
-                    if(e.eventDataType == EventDataType.CHAT){
-                        chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
-                    }
-                    else if(e.eventDataType == EventDataType.SCREEN){
-                        chatEventList.add(new Event(Destination.SERVER, EventDataType.SCREEN, e.data));
-                    }
-                    else if(e.eventDataType == EventDataType.DISCONNECT){
-                        connection.disconnect();
-                        chatConnection.disconnect();
-                    }
-                    else if(e.eventDataType == EventDataType.LOGIN_CODE){
-                        connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
-                        chatEventList.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, e.data));
-                    }
-                    else{
-                        connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
-                    }
+        try{
+            for(int i = 0; i < list.size(); i++){
+                if(list.get(i) == null){
+                    break;
                 }
-                list.remove(i);
-            }
-            else if(list.get(i).destination == Destination.MANAGER){
-                Event e = list.get(i);
-                if(e.data != null){
-                    if(e.eventDataType == EventDataType.DIALOG_REQUEST){
-                        list.add(new Event(currentPage, EventDataType.DIALOG_RESULT,
-                                showDialog((String)e.data)));
-                    }
-                    else{
-                        try {
-                            List<Object> receivedData = jsonParser.parse(new JSONObject((String)e.data));
-                            if(receivedData.get(0) == EventDataType.SIGNAL){
-                                list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
-                            }
-                            else if(receivedData.get(0) == EventDataType.EXAM_INFO){
-                                examInfo = (ExamInfo) receivedData.get(1);
-                                list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.EXAM_INFO, receivedData.get(1)));
-                            }
-                            else if(receivedData.get(0) == EventDataType.USER_INFO){
-                                list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.USER_INFO, receivedData.get(1)));
-                            }
-                            else if(receivedData.get(0) == EventDataType.QR_CODE_DATA){
-                                list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
-                            }
-                            else if(receivedData.get(0) == EventDataType.ENCRYPTED_QUESTION){
-                                encryptedQuestion = (String)receivedData.get(1);
-                                list.add(new Event(currentPage, EventDataType.ENCRYPTED_QUESTION, receivedData.get(1)));
-                            }
-                            else if(receivedData.get(0) == EventDataType.QUESTION_KEY){
-                                list.add(new Event(currentPage, EventDataType.QUESTION_KEY, receivedData.get(1)));
-                            }
-                        }catch (JSONException exception){
-                            exception.printStackTrace();
+                else if(list.get(i).destination == Destination.SERVER){
+                    Event e = list.get(i);
+                    if(e.data != null){
+                        if(e.eventDataType == EventDataType.CHAT){
+                            chatEventList.add(new Event(Destination.SERVER, EventDataType.CHAT, e.data));
+                        }
+                        else if(e.eventDataType == EventDataType.SCREEN){
+                            chatEventList.add(new Event(Destination.SERVER, EventDataType.SCREEN, e.data));
+                        }
+                        else if(e.eventDataType == EventDataType.DISCONNECT){
+                            connection.disconnect();
+                            chatConnection.disconnect();
+                        }
+                        else if(e.eventDataType == EventDataType.LOGIN_CODE){
+                            connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
+                            chatEventList.add(new Event(Destination.SERVER, EventDataType.LOGIN_CODE, e.data));
+                        }
+                        else{
+                            connection.send(jsonMaker.makeJson(e.eventDataType, (String)e.data));
                         }
                     }
+                    list.remove(i);
                 }
-                list.remove(i);
+                else if(list.get(i).destination == Destination.MANAGER){
+                    Event e = list.get(i);
+                    if(e.data != null){
+                        if(e.eventDataType == EventDataType.DIALOG_REQUEST){
+                            list.add(new Event(currentPage, EventDataType.DIALOG_RESULT,
+                                    showDialog((String)e.data)));
+                        }
+                        else{
+                            try {
+                                List<Object> receivedData = jsonParser.parse(new JSONObject((String)e.data));
+                                if(receivedData.get(0) == EventDataType.SIGNAL){
+                                    list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
+                                }
+                                else if(receivedData.get(0) == EventDataType.EXAM_INFO){
+                                    examInfo = (ExamInfo) receivedData.get(1);
+                                    list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.EXAM_INFO, receivedData.get(1)));
+                                }
+                                else if(receivedData.get(0) == EventDataType.USER_INFO){
+                                    list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.USER_INFO, receivedData.get(1)));
+                                }
+                                else if(receivedData.get(0) == EventDataType.QR_CODE_DATA){
+                                    list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
+                                }
+                                else if(receivedData.get(0) == EventDataType.ENCRYPTED_QUESTION){
+                                    encryptedQuestion = (String)receivedData.get(1);
+                                    list.add(new Event(currentPage, EventDataType.ENCRYPTED_QUESTION, receivedData.get(1)));
+                                }
+                                else if(receivedData.get(0) == EventDataType.QUESTION_KEY){
+                                    list.add(new Event(currentPage, EventDataType.QUESTION_KEY, receivedData.get(1)));
+                                }
+                            }catch (JSONException exception){
+                                exception.printStackTrace();
+                            }
+                        }
+                    }
+                    list.remove(i);
+                }
+                else if(list.get(i).eventDataType == EventDataType.NAVIGATE){
+                    targetPage = list.get(i).destination;
+                    list.remove(i);
+                }
             }
-            else if(list.get(i).eventDataType == EventDataType.NAVIGATE){
-                targetPage = list.get(i).destination;
-                list.remove(i);
-            }
-        }
 
-        for(int i = 0; i < chatEventList.size(); i++){
-            if(chatEventList.get(i) == null){
-                break;
-            }
-            else if(chatEventList.get(i).destination == Destination.SERVER){
-                Event e = chatEventList.get(i);
-                if(e.data != null){
-                    if(e.eventDataType == EventDataType.LOGIN_CODE){
-                        chatConnection.connect((String)e.data);
-                    }
-                    else{
-                        chatConnection.send(e.eventDataType, (String)e.data);
-                    }
+            for(int i = 0; i < chatEventList.size(); i++){
+                if(chatEventList.get(i) == null){
+                    break;
                 }
-                chatEventList.remove(i);
-            }
-            else if(chatEventList.get(i).destination == Destination.MANAGER){
-                Event e = chatEventList.get(i);
-                if(e.data != null &&
-                        (currentPage == Destination.ENV_TEST_3 || currentPage == Destination.EXAM_PAGE)){
-                    list.add(new Event(currentPage, EventDataType.CHAT, e.data));
+                else if(chatEventList.get(i).destination == Destination.SERVER){
+                    Event e = chatEventList.get(i);
+                    if(e.data != null){
+                        if(e.eventDataType == EventDataType.LOGIN_CODE){
+                            chatConnection.connect((String)e.data);
+                        }
+                        else{
+                            chatConnection.send(e.eventDataType, (String)e.data);
+                        }
+                    }
+                    chatEventList.remove(i);
                 }
-                chatEventList.remove(i);
+                else if(chatEventList.get(i).destination == Destination.MANAGER){
+                    Event e = chatEventList.get(i);
+                    if(e.data != null){
+                        if(e.eventDataType == EventDataType.CHAT &&
+                                (currentPage == Destination.ENV_TEST_3 || currentPage == Destination.EXAM_PAGE)){
+                            list.add(new Event(currentPage, EventDataType.CHAT, e.data));
+                        }
+                        else if(e.eventDataType == EventDataType.SIGNAL &&
+                                (currentPage == Destination.ENV_TEST_3 || currentPage == Destination.EXAM_PAGE)){
+                            list.add(new Event(currentPage, EventDataType.SIGNAL, e.data));
+                        }
+
+                        chatEventList.remove(i);
+                    }
+
+                }
             }
+        }catch (IndexOutOfBoundsException exc){
+
         }
     }
 

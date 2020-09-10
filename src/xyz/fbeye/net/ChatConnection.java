@@ -21,14 +21,18 @@ public class ChatConnection {
     public ChatConnection(String host, EventList list){
         this.list = list;
         try{
-            socket = IO.socket(host);
-            socket.on("welcome", objects -> {
+            IO.Options options = new IO.Options();
+            options.forceNew = false;
+            socket = IO.socket(host, options);
 
-            }).on("chat", objects -> {
+            System.out.println("connect");
+            socket.on("desktop-chat", objects -> {
                 JSONObject object = (JSONObject)objects[0];
                 ChatInfo chat = new ChatInfo(object.getString("sender"), object.getString("message")
                         , object.getString("timestamp"));
                 list.add(new Event(Destination.MANAGER, EventDataType.CHAT, chat));
+            }).on("welcome", objects -> {
+
             }).on("disconnect", objects -> {
                 //연결 해제(본인)
             }).on("force-disconnect", objects -> {

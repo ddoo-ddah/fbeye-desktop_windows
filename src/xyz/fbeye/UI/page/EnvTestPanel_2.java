@@ -80,7 +80,7 @@ public class EnvTestPanel_2 extends Page{
             }
             Event e = list.get(i);
             if(e.destination == Destination.ENV_TEST_2 && e.eventDataType == EventDataType.SIGNAL){
-                list.remove(i);
+                //list.remove(i);
             }
         }
 
