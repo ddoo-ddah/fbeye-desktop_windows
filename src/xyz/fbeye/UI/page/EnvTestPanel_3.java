@@ -7,14 +7,13 @@ package xyz.fbeye.UI.page;
 
 import com.mommoo.flat.button.FlatButton;
 import com.mommoo.util.FontManager;
+import org.json.JSONArray;
 import xyz.fbeye.UI.page.element.*;
 import xyz.fbeye.datatype.ChatInfo;
-import xyz.fbeye.datatype.UserInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
-import org.json.JSONObject;
 import xyz.fbeye.datatype.examdata.AnswerState;
 import xyz.fbeye.datatype.examdata.ExamInfo;
 import xyz.fbeye.datatype.examdata.QuestionInfo;
@@ -32,10 +31,12 @@ import java.util.List;
 
 public class EnvTestPanel_3 extends Page{
     private ExamInfo sampleExamInfo;
-    private ExamInfo examInfo;
+    public static ExamInfo examInfo;
     private int squaredQRSize;
-    private String encryptedQuestion;
+    public static String encryptedQuestion;
     private boolean isDecrypted;
+
+    private boolean isSendReady = false;
 
     private JLabel topQRCode;
     private JLabel bottomQRCode;
@@ -156,14 +157,16 @@ public class EnvTestPanel_3 extends Page{
                 else if(e.eventDataType == EventDataType.ENCRYPTED_QUESTION){
                     encryptedQuestion = (String)e.data;
                 }
-                else if(e.eventDataType == EventDataType.QUESTION_KEY && encryptedQuestion != null){
-                    try{
-                        encryptedQuestion = Decryptor.decrypt(encryptedQuestion, (String)e.data);
-                    }catch (Exception exception){
-                        exception.printStackTrace();
-                    }
+                else if(e.eventDataType == EventDataType.QUESTION_KEY){
                     if(encryptedQuestion != null){
-                        List<QuestionInfo> questions = QuestionMaker.makeQuestion(new JSONObject(encryptedQuestion));
+
+                        try{
+                            encryptedQuestion = Decryptor.decrypt(encryptedQuestion, (String)e.data);
+                        }catch (Exception exception){
+                            exception.printStackTrace();
+                        }
+
+                        List<QuestionInfo> questions = QuestionMaker.makeQuestion(new JSONArray(encryptedQuestion));
                         if(questions.size() != 0){
                             ExamInfo newExamInfo = new ExamInfo(examInfo.name, examInfo.count,
                                     examInfo.startTime, examInfo.endTime, questions);
@@ -207,7 +210,10 @@ public class EnvTestPanel_3 extends Page{
         }
         if(startDuration.toSeconds() <= 0){
             timePanel.setTime("00:00:00");
-            list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("readyExam")));
+            if(!isSendReady){
+                list.add(new Event(Destination.SERVER, EventDataType.SIGNAL, SignalDataMaker.make("readyExam")));
+                isSendReady = true;
+            }
             startTestButton.setEnabled(true);
             panel.repaint();
         }

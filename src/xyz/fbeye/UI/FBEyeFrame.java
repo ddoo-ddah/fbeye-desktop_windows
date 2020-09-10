@@ -8,6 +8,7 @@ package xyz.fbeye.UI;
 import com.mommoo.flat.button.FlatButton;
 import com.mommoo.util.FontManager;
 import org.json.JSONException;
+import org.json.JSONObject;
 import xyz.fbeye.UI.page.*;
 import xyz.fbeye.UI.page.element.ChooseDialog;
 import xyz.fbeye.UI.page.element.InfoDialog;
@@ -15,21 +16,25 @@ import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
 import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
+import xyz.fbeye.datatype.examdata.ExamInfo;
 import xyz.fbeye.net.ChatConnection;
 import xyz.fbeye.net.Connection;
 import xyz.fbeye.util.EyeGazeEstimator;
 import xyz.fbeye.util.JsonMaker;
 import xyz.fbeye.util.JsonParser;
-import org.json.JSONObject;
 import xyz.fbeye.util.ViewDisposer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
+
+import static xyz.fbeye.UI.page.EnvTestPanel_3.encryptedQuestion;
+import static xyz.fbeye.UI.page.EnvTestPanel_3.examInfo;
 
 public class FBEyeFrame {
     private Connection connection;
@@ -62,7 +67,10 @@ public class FBEyeFrame {
         layout.rowWeights = new double[]{5, 995, Double.MIN_VALUE};
         init();
         //connection.connect("localhost", 9000);//test
-        connection.connect("fbeye.xyz", 10100);
+        new Thread(()->{
+            connection.connect("fbeye.xyz", 10100);
+        }).start();
+
         timer.schedule(task, 100, 100);
         dialog = new ChooseDialog(mainFrame, "종료", "종료하시겠습니까? 저장되지 않습니다.");
         exitPanel = new JPanel();
@@ -230,6 +238,7 @@ public class FBEyeFrame {
                                 list.add(new Event(currentPage, EventDataType.SIGNAL, receivedData.get(1)));
                             }
                             else if(receivedData.get(0) == EventDataType.EXAM_INFO){
+                                examInfo = (ExamInfo) receivedData.get(1);
                                 list.add(new Event(Destination.EXAM_INFO_PAGE, EventDataType.EXAM_INFO, receivedData.get(1)));
                             }
                             else if(receivedData.get(0) == EventDataType.USER_INFO){
@@ -239,6 +248,7 @@ public class FBEyeFrame {
                                 list.add(new Event(currentPage, EventDataType.QR_CODE_DATA, receivedData.get(1)));
                             }
                             else if(receivedData.get(0) == EventDataType.ENCRYPTED_QUESTION){
+                                encryptedQuestion = (String)receivedData.get(1);
                                 list.add(new Event(currentPage, EventDataType.ENCRYPTED_QUESTION, receivedData.get(1)));
                             }
                             else if(receivedData.get(0) == EventDataType.QUESTION_KEY){

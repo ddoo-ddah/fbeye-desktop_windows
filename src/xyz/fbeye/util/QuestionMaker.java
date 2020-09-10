@@ -14,26 +14,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionMaker {
-    public static List<QuestionInfo> makeQuestion(JSONObject jsonObject){
-        JSONArray jsonArray = jsonObject.getJSONArray("data");
+    public static List<QuestionInfo> makeQuestion(JSONArray jsonObject){
+        JSONArray jsonArray = jsonObject;
         List<QuestionInfo> result = new ArrayList<>();
         JSONObject questionObject;
         JSONArray optionArray;
 
         for(int i = 0; i < jsonArray.length(); i++){
             questionObject = jsonArray.getJSONObject(i);
-            int number = questionObject.getInt("_Id");
+            int number = i+1;
             QuestionType questionType;
             String question = questionObject.getString("question");
             List<String> options = new ArrayList<>();
 
             String type = questionObject.getString("type");
-            if(type.equals("descriptive")){
+            if(type.equals("주관식")){
                 questionType = QuestionType.DESCRIPTIVE;
                 result.add(new QuestionInfo(number, questionType, question));
             }
             else{
-                if(type.equals("one_choice")){
+                if(type.equals("선다형")){
                     questionType = QuestionType.ONE_CHOICE;
                 }
                 else{
