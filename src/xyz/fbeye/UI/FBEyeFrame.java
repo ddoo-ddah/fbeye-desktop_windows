@@ -108,7 +108,7 @@ public class FBEyeFrame {
         jsonMaker = new JsonMaker();
         jsonParser = new JsonParser();
         connection = new Connection(list);
-        chatConnection = new ChatConnection("http://fbeye.xyz:3000", chatEventList);
+        chatConnection = new ChatConnection("https://fbeye.xyz", chatEventList);
         mainFrame = new JFrame("FBEye");
         currentPage = Destination.LOGIN_PAGE;
         targetPage = Destination.NONE;
@@ -135,7 +135,7 @@ public class FBEyeFrame {
         mainFrame.setResizable(false);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        mainFrame.setAlwaysOnTop(true);
+//        mainFrame.setAlwaysOnTop(true);
         mainFrame.setUndecorated(true);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override

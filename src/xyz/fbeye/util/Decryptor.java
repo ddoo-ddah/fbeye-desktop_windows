@@ -28,7 +28,7 @@ public class Decryptor {
 
             Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
             c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv));
-            byte[] byteStr = org.apache.commons.codec.binary.Base64.decodeBase64(str.getBytes());
+            byte[] byteStr = Base64.getDecoder().decode(str.getBytes());
             return new String(c.doFinal(byteStr), StandardCharsets.UTF_8);
         }catch (Exception e){
             e.printStackTrace();
