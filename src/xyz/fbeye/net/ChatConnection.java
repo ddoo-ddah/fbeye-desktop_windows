@@ -5,6 +5,7 @@
  */
 package xyz.fbeye.net;
 
+import io.socket.engineio.client.transports.WebSocket;
 import xyz.fbeye.datatype.ChatInfo;
 import xyz.fbeye.datatype.event.Destination;
 import xyz.fbeye.datatype.event.Event;
@@ -23,6 +24,7 @@ public class ChatConnection {
         try{
             IO.Options options = new IO.Options();
             options.forceNew = false;
+            options.transports = new String[]{WebSocket.NAME};
             socket = IO.socket(host, options);
 
             System.out.println("connect");
