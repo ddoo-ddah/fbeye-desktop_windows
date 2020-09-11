@@ -20,7 +20,12 @@ public class EventList {
     }
 
     public void remove(int index){
-        list.remove(index);
+        try{
+            list.remove(index);
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
+
     }
 
     public Event get(int index){
