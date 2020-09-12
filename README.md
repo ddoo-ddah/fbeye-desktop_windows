@@ -34,10 +34,7 @@
 ## Library
 ##### - [Zxing](https://github.com/zxing/zxing "Zxing")
 ##### - [Socket.io](https://github.com/socketio/socket.io-client-java "Socket.io")
-##### - [commons-codec](https://github.com/apache/commons-codec "commons-codec")
 ##### - [JSON](https://github.com/douglascrockford/JSON-java "JSON")
-##### - local-policy
 ##### - okhttp
 ##### - okio
-##### - US_export_policy
 ##### - [FlatSwing](https://github.com/Mommoo/FlatSwing "FlatSwing")
