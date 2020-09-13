@@ -47,6 +47,11 @@ public class EnvTestPanel_3 extends Page{
     private ChatPanel chatPanel;
     private FlatButton startTestButton;
 
+    private final String desc = "본 페이지는 시험 환경을 확인하기 위한 페이지입니다." +
+            "\n실제 시험 페이지와 같은 형태이며, 현재 페이지에서도 감독관과의 채팅이 가능합니다." +
+            "\n부정행위 감지 기능은 실제 응시페이지에서 활성화 됩니다." +
+            "\n시험 시작시간이 되는경우 응시버튼을 눌러 시험을 시작할 수 있습니다.";
+
     public EnvTestPanel_3(EventList list){
         super(list);
         isDecrypted = false;
@@ -242,7 +247,7 @@ public class EnvTestPanel_3 extends Page{
         }
         for(int i = 0; i < 3; i++){
             if(i == 0){
-                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, (i + 1) + ".서술형 문제"));
+                questions.add(new QuestionInfo(i + 1, QuestionType.DESCRIPTIVE, desc));
             }
             else if(i == 1){
                 questions.add(new QuestionInfo(i + 1, QuestionType.ONE_CHOICE, (i + 1) + ".객관식 문제", options));

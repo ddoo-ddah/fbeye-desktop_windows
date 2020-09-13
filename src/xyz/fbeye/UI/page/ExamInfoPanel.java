@@ -5,6 +5,10 @@
  */
 package xyz.fbeye.UI.page;
 
+import com.mommoo.flat.button.FlatButton;
+import com.mommoo.flat.list.FlatListView;
+import com.mommoo.flat.text.label.FlatLabel;
+import com.mommoo.util.FontManager;
 import xyz.fbeye.datatype.FBEyeNotice;
 import xyz.fbeye.datatype.UserInfo;
 import xyz.fbeye.datatype.event.Destination;
@@ -13,16 +17,11 @@ import xyz.fbeye.datatype.event.EventDataType;
 import xyz.fbeye.datatype.event.EventList;
 import xyz.fbeye.datatype.examdata.ExamInfo;
 import xyz.fbeye.util.ViewDisposer;
-import com.mommoo.flat.button.FlatButton;
-import com.mommoo.flat.list.FlatListView;
-import com.mommoo.flat.select.FlatCheckBox;
-import com.mommoo.flat.text.label.FlatLabel;
-import com.mommoo.util.FontManager;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.*;
+import java.util.Vector;
 
 public class ExamInfoPanel extends Page{
     private ExamInfo examInfo;
@@ -117,7 +116,7 @@ public class ExamInfoPanel extends Page{
         checkPanel.setBorder(new LineBorder(Color.BLACK, ViewDisposer.getFontSize(3)));
         checkPanel.setLayout(new GridLayout());
         checkPanel.setVisible(true);
-        readNoticeCheck = new JCheckBox("위 사항들을 읽었으며 동의합니다.");
+        readNoticeCheck = new JCheckBox("위 사항들을 확인하였으며 동의합니다.");
         readNoticeCheck.setBackground(new Color(255, 255, 222));
         readNoticeCheck.setIcon(new ImageIcon("files/icons8-unchecked-checkbox-96.png"));
         readNoticeCheck.setSelectedIcon(new ImageIcon("files/icons8-checked-checkbox-96.png"));
