@@ -19,7 +19,6 @@ public class QuestionMaker {
         List<QuestionInfo> result = new ArrayList<>();
         JSONObject questionObject;
         JSONArray optionArray;
-
         for(int i = 0; i < jsonArray.length(); i++){
             questionObject = jsonArray.getJSONObject(i);
             int number = i+1;
@@ -40,10 +39,10 @@ public class QuestionMaker {
                     questionType = QuestionType.MULTIPLE_CHOICE;
                 }
 
-                optionArray = questionObject.getJSONArray("multiplechoices");
+                optionArray = questionObject.getJSONArray("multipleChoices");
                 for(int j = 0; j < optionArray.length(); j++){
-                    JSONObject optionObject = optionArray.getJSONObject(j);
-                    options.add(optionObject.getString("content"));
+                    String optionObject = optionArray.getString(j);
+                    options.add(optionObject);
                 }
                 result.add(new QuestionInfo(number, questionType, question, options));
             }
