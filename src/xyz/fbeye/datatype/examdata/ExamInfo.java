@@ -7,6 +7,7 @@ package xyz.fbeye.datatype.examdata;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Vector;
 
@@ -45,11 +46,12 @@ public class ExamInfo {
 
     public Vector<String> getInfoList(){
         Vector<String> result = new Vector<>();
-        result.add("시험 정보");
+        result.add("  시험 정보");
         result.add("\t시험 이름: " + name);
         result.add("\t문항 수: " + count);
-        result.add("\t시작 시간: " + startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        result.add("\t종료 시간: " + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        result.add("\t시작 시각: " + startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        result.add("\t종료 시각: " + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        result.add("\t총 시험 시간: " + ChronoUnit.MINUTES.between(startTime, endTime) + "분");
         return result;
     }
 

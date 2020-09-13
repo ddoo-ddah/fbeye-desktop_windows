@@ -20,7 +20,7 @@ public class UserInfo {
 
     public Vector<String> getInfoList(){
         Vector<String> result = new Vector<>();
-        result.add("응시자 정보");
+        result.add("  응시자 정보");
         result.add("\tid: " + id);
         result.add("\t이름: " + name);
         result.add("\t이메일: " + email);

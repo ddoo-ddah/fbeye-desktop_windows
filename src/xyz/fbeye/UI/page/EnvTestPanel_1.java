@@ -45,8 +45,8 @@ public class EnvTestPanel_1 extends Page {
         FlatLabel infoText = new FlatLabel(new FBEyeNotice().envTestInfoText_1);
         infoText.setBackground(new Color(255, 255, 222));
         infoText.setForeground(Color.BLACK);
-        Point location = ViewDisposer.getLocation(550, 300);
-        Dimension size = ViewDisposer.getSize(400, 180);
+        Point location = ViewDisposer.getLocation(450, 300);
+        Dimension size = ViewDisposer.getSize(600, 280);
         infoText.setLocation(location);
         infoText.setSize(size);
         infoText.setFont(FontManager.getNanumGothicFont(Font.PLAIN, ViewDisposer.getFontSize(30)));
