@@ -135,7 +135,7 @@ public class ExamMainPanel {
 
 
         prevButton = new FlatButton("이전");
-        location = ViewDisposer.getLocation(655, 860);
+        location = ViewDisposer.getLocation(390, 860);
         size = ViewDisposer.getSize(70, 50);
         prevButton.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
         prevButton.setSize(size);
@@ -149,7 +149,7 @@ public class ExamMainPanel {
         panel.add(prevButton);
 
         nextButton = new FlatButton("다음");
-        location = ViewDisposer.getLocation(775, 860);
+        location = ViewDisposer.getLocation(1040, 860);
         nextButton.setLocation(location.x - panelLocation.x, location.y - panelLocation.y);
         nextButton.setSize(size);
         nextButton.setBackground(new Color(255, 109, 112));
